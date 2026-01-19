@@ -1,0 +1,123 @@
+import axios from "axios";
+import React, { useState } from "react";
+import { config } from "../config/config";
+import { useNavigate } from "react-router-dom";
+import { BASEURL } from "../config/config";
+import { AppContext, useAppContext } from "../context/context";
+
+function Search() {
+  const [text, setText] = useState("");
+  const [user, setUser] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [value, setValue] = useState("");
+  const {state} =useAppContext(AppContext)
+
+  const nav = useNavigate();
+ 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (text !== "") {
+      try {
+        const res = await axios.get(
+          `${BASEURL}/user/searchUser?key=${text}`,
+          config
+        );
+        const resData = await res.data.user;
+        console.log(res);
+        setUser(resData);
+        const resPost = await res.data.post;
+        setPosts(resPost);
+      } catch (error) {
+        console.log(error);
+        alert(error.response.data.message);
+      }
+    }
+  };
+
+  return (
+    <>
+      <div className="container searchContainer">
+        <form onSubmit={handleSubmit}>
+          <input
+            onChange={(e) => {
+              setText(e.target.value);
+              setValue(e.target.value);
+            }}
+            type="text"
+            className="form-control m-2"
+            placeholder="Search"
+          />
+        </form>
+        <div>
+          {value !== "" ? (
+            <>
+              {user.length || posts.length !== 0 ? (
+                <>
+                  <div className="searchResult">
+                    {user.map((item) => {
+                      return (
+                        <>
+                          <div
+                            key={item._id}
+                            className="d-flex gap-3 p-1"
+                            onClick={() => {
+                              nav(
+                                state.user.id === item._id
+                                  ? "/profile"
+                                  : `/profile/${item._id}`
+                              );
+                            }}
+                          >
+                            <div className="postImgTop">
+                              <img
+                                alt=""
+                                className="userImg"
+                                src={
+                                  item.Photo
+                                    ? `${BASEURL}${item.Photo}`  
+                                    : "/images/personicon.jpg"
+                                }
+                              />
+                            </div>
+                            <p>{item.userName}</p>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                  <div className="rowCard">
+                    {posts.map((item) => {
+                      return (
+                        <>
+                          <div className="column">
+                            <img
+                              alt=""
+                              key={item._id}
+                              src={item.photo ? `${BASEURL}${item.photo}`  : "/images/personicon.jpg"}
+                              className="innerImg"
+                              target="_blank"
+                            />
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <img
+                  alt=""
+                  src="/images/search.jpg"
+                  style={{ width: "100%" }}
+                />
+              )}
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default Search;

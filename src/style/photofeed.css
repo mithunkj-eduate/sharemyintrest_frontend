@@ -1,0 +1,150 @@
+/* PhotoFeed.css */
+.feed-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 20px;
+  background: #fff;
+  /* Seamless white background */
+}
+
+.user-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.post-img-container {
+  position: relative;
+  padding-top: 100%;
+  /* 1:1 aspect ratio for square images */
+  overflow: hidden;
+}
+
+.post-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Ensures images fit nicely */
+  transition: transform 0.3s ease;
+}
+
+.post-img:hover {
+  transform: scale(1.05);
+}
+
+.feed-post {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e6e6e6;
+  /* Subtle divider instead of card */
+  padding-bottom: 10px;
+}
+
+.feed-header {
+  padding: 10px 15px;
+  background: #fff;
+}
+
+.feed-body {
+  padding: 10px 15px;
+}
+
+.comment-textarea {
+  resize: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-size: 14px;
+  height: 40px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+}
+
+.comment-textarea:focus {
+  outline: none;
+  border-color: #3897f0;
+  box-shadow: 0 0 5px rgba(56, 151, 240, 0.3);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #3897f0;
+  border-color: #3897f0;
+  border-radius: 20px;
+  padding: 5px 15px;
+  font-size: 14px;
+}
+
+.btn-primary:hover {
+  background-color: #2a7bc2;
+  border-color: #2a7bc2;
+}
+
+.share-input {
+  border-radius: 20px;
+  padding: 10px 15px;
+  font-size: 14px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+}
+
+.share-input:focus {
+  outline: none;
+  border-color: #3897f0;
+  box-shadow: 0 0 5px rgba(56, 151, 240, 0.3);
+}
+
+.modal-content {
+  border-radius: 15px;
+}
+
+.modal-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.modal-footer .btn-secondary {
+  border-radius: 20px;
+  padding: 5px 15px;
+}
+
+.modal-footer .btn-primary {
+  border-radius: 20px;
+  padding: 5px 15px;
+}
+
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 576px) {
+  .feed-container {
+    padding: 10px;
+  }
+
+  .user-img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .comment-textarea {
+    font-size: 12px;
+    height: 35px;
+  }
+}
+
+@media (min-width: 576px) {
+  .feed-container {
+    max-width: 100vw;
+  }
+}

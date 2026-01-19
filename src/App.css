@@ -1,0 +1,366 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+a {
+  list-style: none;
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+.logoImgTop {
+  width: 300px;
+  height: auto;
+}
+.pagenotfoundImgTop {
+  max-width: 500px;
+}
+.heaerNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+.navListLarg {
+  display: flex;
+}
+.navItem {
+  padding: 10px;
+}
+.headerNavPhone {
+  display: none;
+}
+.logo {
+  padding: 10px;
+  background-color: #fff;
+  /* position: fixed;
+  top: 0; */
+}
+.navList {
+  position: fixed;
+  bottom: 0;
+  margin: 0;
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  z-index: 101;
+}
+.contenerAllPost {
+  max-width: 500px;
+  margin: auto;
+  position: relative;
+}
+.contenerUser {
+  max-width: 500px;
+  margin: auto;
+  margin-top: 20px;
+  position: relative;
+}
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  width: 100vw;
+}
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cardUserInfo {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 16px;
+  position: absolute;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 10px;
+  color: #fff;
+}
+.cardBody {
+  padding: 10px;
+  padding-bottom: 20px;
+}
+.cardUserName {
+  font-size: 16px;
+  color: #fff;
+}
+.cardTitle {
+  font-size: 16px;
+  margin: 0;
+}
+.cardHeader {
+  margin: auto;
+  object-fit: fill;
+  overflow: hidden;
+  max-height: 60vh;
+}
+.homeCard {
+  width: 100%;
+  margin: 0;
+  max-height: 60vh;
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+  display: block;
+}
+.commentUserName {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+.commentDis {
+  font-size: 12px;
+}
+.commentCardBody {
+  padding: 10px;
+  max-height: 80vh;
+  position: relative;
+}
+.commentBody {
+  padding-left: 20px;
+  overflow-y: scroll;
+  max-height: 30vh;
+}
+.commentImgTop {
+  width: 220px;
+  max-height: 300px;
+  overflow: hidden;
+  object-fit: cover;
+  margin: auto;
+}
+.fullImgTop {
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  object-fit: cover;
+  margin: auto;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  gap: 20px;
+  text-align: center;
+  flex-wrap: wrap;
+}
+.userImgTop {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: cover;
+}
+.userImg {
+  width: 100%;
+  height: auto;
+}
+.userPost {
+  width: 30%;
+  height: 200px;
+  overflow: hidden;
+  object-fit: fill;
+  object-position: 50%, 50%;
+}
+.createPostUser {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  object-fit: cover;
+  border-radius: 50%;
+}
+textarea {
+  width: 90%;
+  border: none;
+  outline: none;
+}
+
+.postCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.postImgTop {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.rowCard {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: center;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+  max-width: 180px;
+  max-height: 240px;
+  overflow: hidden;
+  object-fit: cover;
+  padding: 4px;
+}
+.innerImg {
+  width: 100%;
+  height: 100%;
+}
+.fullImg {
+  width: 220px;
+  max-height: 300px;
+  overflow: hidden;
+  object-fit: cover;
+  margin: auto;
+}
+.containerCreatePost {
+  max-width: 500px;
+  margin: auto;
+  position: relative;
+  margin-bottom: 20%;
+  /* display: flex; */
+  /* justify-content: center;
+  align-items: center;
+  flex-direction: column; */
+}
+.createImgTop {
+  width: 80%;
+  max-height: 60vh;
+  overflow: hidden;
+  margin: auto;
+}
+.loadingTop {
+  position: absolute;
+  top: 30vh;
+  left: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.loading {
+  transform: translate(-50%);
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid blue;
+  border-bottom: 5px solid blue;
+  width: 30px;
+  height: 30px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 0.8s linear infinite;
+}
+
+.searchResult {
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+
+.story {
+  display: flex;
+  overflow: hidden;
+  width: 60px;
+  height: 80px;
+}
+.allStoryFollowing {
+  display: flex;
+  overflow-x: scroll;
+}
+.storyFollowing {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+}
+
+.story:hover {
+  width: 100%;
+  height: auto;
+  overflow-x: scroll;
+}
+.allStoryFollowing:hover {
+  flex-direction: column;
+  overflow-y: scroll;
+}
+.storyFollowing:hover {
+  width: 100%;
+  height: 100%;
+  overflow-x: scroll;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .contenerAllPost {
+    width: 440px;
+  }
+  .cardHeader {
+    max-height: 80vh;
+    overflow: hidden;
+  }
+  /* .column {
+    max-height: 200px;
+  } */
+}
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  .logoImgTop {
+    width: 260px;
+    padding-left: 10px;
+  }
+  .headerNavLarge {
+    display: none;
+  }
+  .headerNavPhone {
+    display: block;
+    margin-left: -4px;
+  }
+  .contenerAllPost {
+    margin-bottom: 15%;
+  }
+  .rowCard {
+    margin-bottom: 20%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 539px) {
+  .userImgTop {
+    width: 100px;
+    height: 100px;
+  }
+  .fullImg {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+
