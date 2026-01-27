@@ -154,7 +154,7 @@ function ProfilePic({ data }) {
             >
               Remove Current Photo
             </button> */}
-            <Post />
+            <Post pageType={"Modal"}/>
           </div>
         </Modal.Body>
       </Modal>

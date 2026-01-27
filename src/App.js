@@ -50,7 +50,7 @@ function MainPage() {
         <Route path="/signup" element={<SingUpPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/createpost" element={<Post />} />
+        <Route path="/createpost" element={<Post pageType={"General"}/>} />
         <Route path="/postdetails" element={<PostDetail />} />
         <Route path="/profile/:userId" element={<UserProfile />} />
         <Route path="/followingpost" element={<FollowingPost />} />

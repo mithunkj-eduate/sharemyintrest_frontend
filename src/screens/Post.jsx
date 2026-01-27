@@ -6,7 +6,7 @@ import { BASEURL } from "../config/config";
 import Header from "../compount/Header";
 import { AppContext, useAppContext } from "../context/context";
 
-function Post() {
+function Post({ pageType }) {
   const [pic, setPic] = useState("/images/uplodeImg.jpg");
   const [image, setImage] = useState();
   const [title, setTitle] = useState();
@@ -137,8 +137,8 @@ function Post() {
 
   return (
     <>
-      {" "}
-      <Header />
+      {pageType === "General" ? <Header /> : null}
+
       <div className="conatiner">
         <div className="containerCreatePost">
           {!loading ? (
@@ -182,7 +182,9 @@ function Post() {
                     alt=""
                     className="userImg"
                     src={
-                      state.user ? `${BASEURL}${state.user?.Photo}`   : "/images/personicon.jpg"
+                      state.user
+                        ? `${BASEURL}${state.user?.Photo}`
+                        : "/images/personicon.jpg"
                     }
                   />
                 </div>
