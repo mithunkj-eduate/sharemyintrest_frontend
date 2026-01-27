@@ -19,3 +19,6 @@ export const BASEURL = process.env.REACT_APP_BACK_END_BASE_URL
 export const BASEURL2 = process.env.REACT_APP_FRONT_END_BASE_URL
   ? process.env.REACT_APP_FRONT_END_BASE_URL
   : "http://localhost:3000/api";
+
+// export const BASEURL = "https://api.shareurinterest.com/"
+// export const BASEURL2 = "https://snap.shareurinterest.com/"

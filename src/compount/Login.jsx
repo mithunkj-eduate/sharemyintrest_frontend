@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ const initialValues = {
 
 function Login() {
   const nav = useNavigate();
+  const [error, setError] = useState("");
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
@@ -29,19 +30,21 @@ function Login() {
           });
 
           if (res && res.data && res.data.token) {
-            
             localStorage.setItem("smitoken", res.data.token);
             localStorage.setItem("user", JSON.stringify(res.data.user));
 
-           
             // successmessage("login successfuly");
             alert("login successfuly");
             nav("/welcom");
           }
         } catch (error) {
+          console.log(error);
+          setError(toString(error));
           if (error.response.data.message) {
             // errormessage(error.response.data.message);
             alert(error.response.data.message);
+           
+            
           } else {
             // errormessage("server error");
             alert("server error");
@@ -112,6 +115,8 @@ function Login() {
               </form>
             </div>
           </div>
+
+          {error ? error : ""}
         </div>
       </div>
       <ToastContainer />

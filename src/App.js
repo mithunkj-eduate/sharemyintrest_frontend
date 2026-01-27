@@ -19,24 +19,42 @@ import { useEffect } from "react";
 import { payloadTypes } from "./context/reducer";
 import axios from "axios";
 import { BASEURL } from "./config/config";
+import TestPage from "./screens/TestPage";
 
 function MainPage() {
   return (
     <>
       {/* <Header /> */}
-      <Routes>
+      {/* <Routes>
         <Route path="/welcom" element={<WelcomPage />}></Route>
         <Route path="/" element={<Home />}></Route>
         <Route path="/signup" element={<SingUpPage />}></Route>
         <Route exact path="/profile" element={<Profile />}></Route>
         <Route path={"/login"} element={<Login />}></Route>
-        {/* <Route path="/createpost" element={<Createpost />}></Route> */}
+     
         <Route path="/createpost" element={<Post />}></Route>
         <Route path="/postdetails" element={<PostDetail />}></Route>
-        <Route path={"*" || "/pagenotfound"} element={<PageNotFound />}></Route>
+
         <Route path="/profile/:userId" element={<UserProfile />}></Route>
         <Route path="/followingpost" element={<FollowingPost />}></Route>
         <Route path="/linkpost/:id" element={<LinkPost />}></Route>
+
+        <Route path={"*" || "/pagenotfound"} element={<PageNotFound />}></Route>
+      </Routes> */}
+
+      {/* <Route path="/createpost" element={<Createpost />}></Route> */}
+      {/* <Route path={"*" || "/pagenotfound"} element={<PageNotFound />}></Route> */}
+      <Routes>
+        <Route path="/welcom" element={<WelcomPage />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<SingUpPage />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/createpost" element={<Post />} />
+        <Route path="/postdetails" element={<PostDetail />} />
+        <Route path="/profile/:userId" element={<UserProfile />} />
+        <Route path="/followingpost" element={<FollowingPost />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
   );
@@ -46,29 +64,53 @@ export { MainPage };
 
 const App = () => {
   const { state } = useAppContext(AppProvider);
+  console.log(state, "state", BASEURL, "BASEURL");
+  // if (state.user && state.user.id) {
+  //   return (
+  //     <>
+  //       <MainPage />
+  //     </>
+  //   );
+  // } else {
+  //   return (
+  //     <>
+  //       <Routes>
+  //         <Route path="/" element={<WelcomPage />}></Route>
+  //         <Route path="/welcom" element={<WelcomPage />}></Route>
+  //         <Route path="/signup" element={<SingUpPage />}></Route>
+  //         <Route path={"/login"} element={<Login />}></Route>
+  //         {/* <Route
+  //           path={"*" || "/pagenotfound"}
+  //           element={<PageNotFound />}
+  //         ></Route> */}
+  //         <Route path="*" element={<PageNotFound />} />
+  //       </Routes>
+  //     </>
+  //   );
+  // }
 
-  if (state.user && state.user.id) {
-    return (
-      <>
-        <MainPage />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Routes>
+  return (
+    <>
+      <Routes>
+        {state.user && state.user.id ? (
+          <Route path="/*" element={<MainPage />} />
+        ) : (
+          // <Route path="/" element={<Login />} />
           <Route path="/" element={<WelcomPage />}></Route>
-          <Route path="/welcom" element={<WelcomPage />}></Route>
-          <Route path="/signup" element={<SingUpPage />}></Route>
-          <Route path={"/login"} element={<Login />}></Route>
-          <Route
-            path={"*" || "/pagenotfound"}
-            element={<PageNotFound />}
-          ></Route>
-        </Routes>
-      </>
-    );
-  }
+        )}
+        <Route path="/test" element={<TestPage />}></Route>
+        {/* <Route path="/" element={<WelcomPage />}></Route> */}
+        <Route path="/welcom" element={<WelcomPage />}></Route>
+        <Route path="/signup" element={<SingUpPage />}></Route>
+        <Route path="/login" element={<Login />}></Route>
+        {/* <Route
+          path={"*" || "/pagenotfound"}
+          element={<PageNotFound />}
+        ></Route> */}
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </>
+  );
 };
 
 export default App;

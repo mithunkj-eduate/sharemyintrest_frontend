@@ -164,7 +164,7 @@ const Home = () => {
     const container = img.parentElement;
     container.style.paddingTop = `${(img.naturalHeight / img.naturalWidth) * 100}%`;
   };
-
+console.log(BASEURL,BASEURL2)
   return (
     <>
       <Header />

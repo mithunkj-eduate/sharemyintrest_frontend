@@ -202,14 +202,14 @@ function SingUpPage() {
                     Sign Up
                   </button>
                 </div>
-                <GoogleLogin
+                {/* <GoogleLogin
                   onSuccess={(credentialResponse) => {
                     continueWithGoogle(credentialResponse);
                   }}
                   onError={() => {
                     console.log("Login Failed");
                   }}
-                />
+                /> */}
               </form>
               <p>
                 Already have an account?
