@@ -4,6 +4,7 @@ import { CiFaceSmile } from "react-icons/ci";
 import "../style/message.css";
 import { AppContext, useAppContext } from "../context/context";
 import { BASEURL } from "../config/config";
+import { timeAgo } from "./helper/utlity";
 
 function CommentData({ values }) {
   const [show, setShow] = useState(false);
@@ -37,13 +38,14 @@ function CommentData({ values }) {
         <div className="commentCardBody">
           <div className="commentBody">
             {item.comments.map((postItem,index) => {
-              // Date object representing a specific date
-              const date = new Date(postItem.date);
-              // Convert the date to local time (for example, Kolkata, India)
-              const localDateString = date.toLocaleString("en-IN", {
-                timeZone: "Asia/Kolkata",
-              });
-              let commentTime = localDateString.split(",");
+              // // Date object representing a specific date
+              // const date = new Date(postItem.date);
+              // // Convert the date to local time (for example, Kolkata, India)
+              // const localDateString = date.toLocaleString("en-IN", {
+              //   timeZone: "Asia/Kolkata",
+              // });
+              // let commentTime = localDateString.split(",");
+              const commentTime = timeAgo(postItem.date);
 
               return (
                 <>
@@ -63,12 +65,12 @@ function CommentData({ values }) {
                               />
                             </div>
                             <p>{postItem.postedBy.userName}</p>
-                            <p className="messageDate">{`${commentTime[0]}`}</p>
+                            <p className="messageDate">{`${commentTime}`}</p>
                           </div>
                           <pre className="message-content">
                             {postItem.comment}
                           </pre>
-                          <p className="messageTime">{` ${commentTime[1]}`}</p>
+                          {/* <p className="messageTime">{` ${commentTime}`}</p> */}
                         </div>
                       </>
                     ) : (
@@ -87,13 +89,13 @@ function CommentData({ values }) {
                             </div>
                             <p>{postItem.postedBy.userName}</p>
                             <p className="messageDate">
-                              {`${commentTime[0]} `}
+                              {`${commentTime} `}
                             </p>
                           </div>
                           <pre className="message-content">
                             {postItem.comment}
                           </pre>
-                          <p className="messageTime">{`${commentTime[1]}`}</p>
+                          {/* <p className="messageTime">{`${commentTime[1]}`}</p> */}
                         </div>
                       </>
                     )}

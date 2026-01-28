@@ -13,6 +13,7 @@ import { GrGallery } from "react-icons/gr";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
+import { timeAgo } from "../compount/helper/utlity";
 
 function UserProfile() {
   const { userId } = useParams();
@@ -186,7 +187,6 @@ function UserProfile() {
   };
 
   useEffect(() => {
-
     if (state.user && state.user?.id) {
       feactchUser();
     }
@@ -403,13 +403,14 @@ function Message() {
               <div className="commentCardBody">
                 <div className="col-md-4 m-auto">
                   {messages.map((postItem) => {
-                    // Date object representing a specific date
-                    const date = new Date(postItem.createdAt);
-                    // Convert the date to local time (for example, Kolkata, India)
-                    const localDateString = date.toLocaleString("en-IN", {
-                      timeZone: "Asia/Kolkata",
-                    });
-                    let commentTime = localDateString.split(",");
+                    // // Date object representing a specific date
+                    // const date = new Date(postItem.createdAt);
+                    // // Convert the date to local time (for example, Kolkata, India)
+                    // const localDateString = date.toLocaleString("en-IN", {
+                    //   timeZone: "Asia/Kolkata",
+                    // });
+                    // let commentTime = localDateString.split(",");
+                    const commentTime = timeAgo(postItem.date);
 
                     return (
                       <>
@@ -431,7 +432,7 @@ function Message() {
                                   </div>
 
                                   <p>{postItem.postedBy.userName}</p>
-                                  <p className="messageDate">{`${commentTime[0]}`}</p>
+                                  <p className="messageDate">{`${commentTime}`}</p>
                                 </div>
                                 <pre
                                   className={
@@ -469,7 +470,7 @@ function Message() {
                                     }
                                     onClick={() => downloadFile(postItem._id)}
                                   />
-                                  <p className="messageTime ms-auto">{` ${commentTime[1]}`}</p>
+                                  {/* <p className="messageTime ms-auto">{` ${commentTime[1]}`}</p> */}
                                 </div>
                               </div>
                             </>
@@ -490,7 +491,7 @@ function Message() {
                                   </div>
                                   <p>{postItem.postedBy.userName}</p>
                                   <p className="messageDate">
-                                    {`${commentTime[0]} `}
+                                    {`${commentTime} `}
                                   </p>
                                 </div>
                                 <pre className="message-content">
@@ -504,11 +505,7 @@ function Message() {
                                     {postItem.link}{" "}
                                   </a>
                                 </div>
-                                <div
-                                  className={
-                                    postItem.photo ? "" : "d-none"
-                                  }
-                                >
+                                <div className={postItem.photo ? "" : "d-none"}>
                                   <img
                                     alt=""
                                     className="userImg"
@@ -529,7 +526,7 @@ function Message() {
                                     }
                                     onClick={() => downloadFile(postItem._id)}
                                   />
-                                  <p className="messageTime ms-auto">{`${commentTime[1]}`}</p>
+                                  {/* <p className="messageTime ms-auto">{`${commentTime[1]}`}</p> */}
                                 </div>
                               </div>
                             </>
