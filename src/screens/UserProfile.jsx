@@ -31,7 +31,7 @@ function UserProfile() {
   const [stories, setStories] = useState([]);
   const nav = useNavigate();
 
-  let limit = 10;
+  let limit = 20;
   // let skip = 0;
 
   const isOnline = useIsOnline();
@@ -81,7 +81,7 @@ function UserProfile() {
       document.documentElement.clientHeight + window.pageYOffset >=
       document.documentElement.scrollHeight
     ) {
-      limit = limit + 10;
+      limit = limit + 20;
       //skip = skip + 10;
       feactchUser();
     }

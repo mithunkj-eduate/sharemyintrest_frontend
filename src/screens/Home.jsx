@@ -26,7 +26,7 @@ const Home = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [shareMessage, setShareMessage] = useState("");
   const [currentPostId, setCurrentPostId] = useState(null);
-  const limit = 3;
+  const limit = 20;
 
   const isOnline = useIsOnline();
 
@@ -63,7 +63,7 @@ const Home = () => {
         document.documentElement.clientHeight + window.pageYOffset + 1000 >=
         document.documentElement.scrollHeight
       ) {
-        setSkip((prev) => prev + 3);
+        setSkip((prev) => prev + 20);
       }
     }, 200),
     []

@@ -27,7 +27,7 @@ function Profile() {
   const { state } = useAppContext(AppContext);
 
 
-  let limit = 12;
+  let limit = 20;
   // let skip = 0;
 
   const isOnline = useIsOnline();
@@ -76,7 +76,7 @@ function Profile() {
       document.documentElement.clientHeight + window.pageYOffset >=
       document.documentElement.scrollHeight
     ) {
-      limit = limit + 12;
+      limit = limit + 20;
       //skip = skip + 6;
       fetchAllPost();
     }

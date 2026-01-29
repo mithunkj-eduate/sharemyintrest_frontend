@@ -29,7 +29,7 @@ function FollowingPost() {
 
   const { state } = useAppContext(AppContext);
 
-  let limit = 3;
+  let limit = 20;
   let skip = 0;
 
   const isOnline = useIsOnline();
@@ -78,7 +78,7 @@ function FollowingPost() {
       document.documentElement.scrollHeight
     ) {
       //limit = limit + 3;
-      skip = skip + 3;
+      skip = skip + 20;
       fetchAllPost();
     }
   };
