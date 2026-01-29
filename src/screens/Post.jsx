@@ -5,6 +5,7 @@ import { config1 } from "../config/config";
 import { BASEURL } from "../config/config";
 import Header from "../compount/Header";
 import { AppContext, useAppContext } from "../context/context";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 function Post({ pageType }) {
   const [pic, setPic] = useState("/images/uplodeImg.jpg");
@@ -14,7 +15,7 @@ function Post({ pageType }) {
   const { state } = useAppContext(AppContext);
 
   const nav = useNavigate();
-
+  const isOnline = useIsOnline();
   //========================= image resize ==========================//
 
   const [invalidImage, setinvalidImage] = useState(null);
@@ -122,6 +123,10 @@ function Post({ pageType }) {
     }
 
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const resPost = await axios.post(
         `${BASEURL}/stories/createStory`,
         data,

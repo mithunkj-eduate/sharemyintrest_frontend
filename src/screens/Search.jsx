@@ -4,6 +4,7 @@ import { config } from "../config/config";
 import { useNavigate } from "react-router-dom";
 import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 function Search() {
   const [text, setText] = useState("");
@@ -14,10 +15,16 @@ function Search() {
 
   const nav = useNavigate();
  
+  const isOnline = useIsOnline();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (text !== "") {
       try {
+        if (!isOnline) {
+          alert("No internet connection. Please check your network.");
+          return;
+        }
         const res = await axios.get(
           `${BASEURL}/user/searchUser?key=${text}`,
           config

@@ -10,6 +10,7 @@ import jwt_decode from "jwt-decode";
 import { BASEURL } from "../config/config";
 import { errormessage, successmessage } from "./helper/Toastify";
 import Header from "./Header";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 const initialValues = {
   user: "",
@@ -21,7 +22,7 @@ const initialValues = {
 };
 
 function SingUpPage() {
-  
+  const isOnline = useIsOnline();
 
   const nav = useNavigate();
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -32,6 +33,10 @@ function SingUpPage() {
       onSubmit: async (values, action) => {
         delete values.confirm_password;
         try {
+          if (!isOnline) {
+            alert("No internet connection. Please check your network.");
+            return;
+          }
           const res = await axios.post(`${BASEURL}/auth/register`, values);
           nav("/login");
         } catch (error) {

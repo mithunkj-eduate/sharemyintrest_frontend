@@ -8,6 +8,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { FcLike } from "react-icons/fc";
 import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 function PostDetail({ data }) {
   const [show, setShow] = useState(false);
@@ -16,10 +17,15 @@ function PostDetail({ data }) {
   const { state } = useAppContext(AppContext);
 
   const nav = useNavigate();
-
+  const isOnline = useIsOnline();
+  
   const feacthDelete = async (postId) => {
     try {
       if (window.confirm("Do you really want to delete this post ?")) {
+        if (!isOnline) {
+          alert("No internet connection. Please check your network.");
+          return;
+        }
         const res = await axios.delete(
           `${BASEURL}/post/deletePost/${postId}`,
           config

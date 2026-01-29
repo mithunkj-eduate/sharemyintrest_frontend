@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 function Profile() {
   const [comment, setComment] = useState("");
@@ -29,6 +30,8 @@ function Profile() {
   let limit = 12;
   // let skip = 0;
 
+  const isOnline = useIsOnline();
+
   const fetchAllPost = async () => {
     if (loading === false) {
       setLoading(true);
@@ -37,6 +40,10 @@ function Profile() {
     }
 
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.get(
         `${BASEURL}/user/${state.user.id}?limit=${limit}`,
         config
@@ -77,6 +84,10 @@ function Profile() {
 
   const feactLike = async (id) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.put(
         `${BASEURL}/post/like`,
         { postId: id },
@@ -99,6 +110,10 @@ function Profile() {
 
   const feactunLike = async (id) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
@@ -120,6 +135,10 @@ function Profile() {
 
   const feactComment = async (id) => {
     if (comment !== "") {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.put(
         `${BASEURL}/post/comment`,
         { text: comment, postId: id },
@@ -142,6 +161,10 @@ function Profile() {
     const formdata = new FormData();
     formdata.append("photo", url);
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const resPost = await axios.put(
         `${BASEURL}/user/uploadProfilePic`,
         formdata,
@@ -160,29 +183,47 @@ function Profile() {
   };
 
   const followUser = async (userId) => {
-    const res = await axios.put(
-      `${BASEURL}/user/follow`,
-      { followId: userId },
-      config
-    );
-    setIsFollow(true);
-    const resData = await res.data.data;
-    setUser(resData);
-    setUserFollowing(resData.following);
-    setUserFollowers(resData.followers);
+    try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
+      const res = await axios.put(
+        `${BASEURL}/user/follow`,
+        { followId: userId },
+        config
+      );
+      setIsFollow(true);
+      const resData = await res.data.data;
+      setUser(resData);
+      setUserFollowing(resData.following);
+      setUserFollowers(resData.followers);
+    } catch (error) {
+      console.log(error)
+    }
+  
   };
 
   const unfollowUser = async (userId) => {
-    const res = await axios.put(
-      `${BASEURL}/user/unfollow`,
-      { followId: userId },
-      config
-    );
-    setIsFollow(false);
-    const resData = await res.data.data;
-    setUser(resData);
-    setUserFollowing(resData.following);
-    setUserFollowers(resData.followers);
+    try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
+      const res = await axios.put(
+        `${BASEURL}/user/unfollow`,
+        { followId: userId },
+        config
+      );
+      setIsFollow(false);
+      const resData = await res.data.data;
+      setUser(resData);
+      setUserFollowing(resData.following);
+      setUserFollowers(resData.followers);
+    } catch (error) {
+      console.log(error)
+    }
+   
   };
 
   const deleteStory = async (id) => {

@@ -4,6 +4,7 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { config } from "../config/config";
 import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
+import { useIsOnline } from "../hooks/useIsOnline";
 // import { AiOutlineHeart } from 'react-icons/ai'
 // import { FcLike } from 'react-icons/fc'
 // import { CiFaceSmile } from 'react-icons/ci'
@@ -17,10 +18,14 @@ const LinkPost = () => {
   const [post, setPost] = useState({});
   const {state} = useAppContext(AppContext)
 
-
+  const isOnline = useIsOnline();
 
   const getPost = async (postId) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.get(`${BASEURL}/post/${params.id}`, config);
       const resData = await res.data.data;
       setPost(resData);

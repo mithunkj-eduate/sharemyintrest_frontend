@@ -13,6 +13,7 @@ import { CarouselPage2 } from "../compount/helper/CarouselPage";
 import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 function FollowingPost() {
   const nav = useNavigate();
@@ -31,8 +32,15 @@ function FollowingPost() {
   let limit = 3;
   let skip = 0;
 
+  const isOnline = useIsOnline();
+
   const fetchAllPost = async () => {
+   
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.get(
         `${BASEURL}/user/followingpost?limit=${limit}&skip=${skip}`,
         config
@@ -77,6 +85,10 @@ function FollowingPost() {
 
   const feactLike = async (id) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.put(
         `${BASEURL}/post/like`,
         { postId: id },
@@ -98,6 +110,11 @@ function FollowingPost() {
 
   const feactunLike = async (id) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
+
       const res = await axios.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
@@ -119,6 +136,10 @@ function FollowingPost() {
 
   const feactComment = async (id) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       if (comment !== "") {
         const res = await axios.put(
           `${BASEURL}/post/comment`,

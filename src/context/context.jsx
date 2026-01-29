@@ -3,6 +3,7 @@ import { createContext } from "react";
 import { payloadTypes, reducer } from "./reducer";
 import axios from "axios";
 import { BASEURL } from "../config/config";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 // ---------------- Initial State ----------------
 export const initialState = {
@@ -19,13 +20,17 @@ export const AppContext = createContext({
 // ---------------- Provider ----------------
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const isOnline = useIsOnline();
 
 
   const token = localStorage.getItem("smitoken") ?? "";
 
   const getUser = async () => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.get(`${BASEURL}/verify`, {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -14,6 +14,7 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
 import { timeAgo } from "../compount/helper/utlity";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 function UserProfile() {
   const { userId } = useParams();
@@ -33,6 +34,8 @@ function UserProfile() {
   let limit = 10;
   // let skip = 0;
 
+  const isOnline = useIsOnline();
+
   const feactchUser = async () => {
     if (loading === false) {
       setLoading(true);
@@ -40,6 +43,10 @@ function UserProfile() {
       setLoading(false);
     }
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.get(
         `${BASEURL}/user/${userId}?limit=${limit}`,
         config
@@ -82,6 +89,10 @@ function UserProfile() {
 
   const followUser = async (userId) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.put(
         `${BASEURL}/user/follow`,
         { followId: userId },
@@ -100,6 +111,10 @@ function UserProfile() {
 
   const unfollowUser = async (userId) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.put(
         `${BASEURL}/user/unfollow`,
         { followId: userId },
@@ -119,6 +134,10 @@ function UserProfile() {
 
   const feactLike = async (id) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.put(
         `${BASEURL}/post/like`,
         { postId: id },
@@ -141,6 +160,10 @@ function UserProfile() {
 
   const feactunLike = async (id) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
@@ -163,6 +186,10 @@ function UserProfile() {
 
   const feactComment = async (id) => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       if (comment !== "") {
         const res = await axios.put(
           `${BASEURL}/post/comment`,

@@ -1,149 +1,201 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
 import { VscDiffAdded } from "react-icons/vsc";
 import { RiMovieFill } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { LuLogOut } from "react-icons/lu";
 import { AppContext, useAppContext } from "../context/context";
+import "../style/header.css";
 
 function Header() {
-  const nav = useNavigate();
-  // const token = localStorage.getItem("smitoken");
+  const navigate = useNavigate();
+  const location = useLocation(); // ← this gives us current path
   const { state } = useAppContext(AppContext);
 
+  const isActive = (path) => {
+    return location.pathname === path ? "active" : "";
+  };
 
   const loginStatus = () => {
     if (state.user && state.user.id) {
-      return [
+      return (
         <>
-          <Nav.Link href="/" key={0}>
-            <li className="navItem">Home</li>
-          </Nav.Link>
-          <Nav.Link href="/profile" key={1}>
-            <li className="navItem">Profile</li>
-          </Nav.Link>
-          <Nav.Link href="/followingpost" key={2}>
-            <li className="navItem">Following</li>
-          </Nav.Link>
-          <Nav.Link href="/createpost">
-            <li className="navItem">Create Post</li>
+          <Nav.Link href="/" className={`navItem ${isActive("/")}`}>
+            Home
           </Nav.Link>
 
-          <li
+          <Nav.Link
+            href="/profile"
+            className={`navItem ${isActive("/profile")}`}
+          >
+            Profile
+          </Nav.Link>
+
+          <Nav.Link
+            href="/followingpost"
+            className={`navItem ${isActive("/followingpost")}`}
+          >
+            Following
+          </Nav.Link>
+
+          <Nav.Link
+            href="/createpost"
+            className={`navItem ${isActive("/createpost")}`}
+          >
+            Create Post
+          </Nav.Link>
+
+          {/* Optional: Logout as link/button */}
+          {/* <li
             onClick={() => {
               localStorage.clear();
-              nav("/login");
+              navigate("/login");
             }}
-            className="navItem textPrimary"
-            key={3}
+            className="navItem textPrimary pointer"
+            style={{ cursor: "pointer" }}
           >
             Log Out
-          </li>
-        </>,
-      ];
+          </li> */}
+        </>
+      );
     } else {
-      return [
+      return (
         <>
-          <Nav.Link href="/signup" key={0}>
-            <li className="navItem textPrimary">Signup</li>
+          <Nav.Link
+            href="/signup"
+            className={`navItem textPrimary ${isActive("/signup")}`}
+          >
+            Signup
           </Nav.Link>
-          <Nav.Link href="/login" key={1}>
-            <li className="navItem textPrimary">Login</li>
+          <Nav.Link
+            href="/login"
+            className={`navItem textPrimary ${isActive("/login")}`}
+          >
+            Login
           </Nav.Link>
-        </>,
-      ];
+        </>
+      );
     }
   };
 
   const loginStatusPhone = () => {
     if (state.user && state.user.id) {
-      return [
+      return (
         <>
-          <Nav.Link href="/" key={0}>
-            <AiFillHome className="fs-1 " />
+          <Nav.Link href="/" className={`navItem ${isActive("/")}`}>
+            <AiFillHome className="fs-1" />
           </Nav.Link>
-          <Nav.Link href="/createpost" key={1}>
+
+          <Nav.Link
+            href="/createpost"
+            className={`navItem ${isActive("/createpost")}`}
+          >
             <VscDiffAdded className="fs-1" />
           </Nav.Link>
-          <Nav.Link href="/followingpost" key={2}>
+
+          <Nav.Link
+            href="/followingpost"
+            className={`navItem ${isActive("/followingpost")}`}
+          >
             <RiMovieFill className="fs-1" />
           </Nav.Link>
-          <Nav.Link href="/profile" key={3}>
+
+          <Nav.Link
+            href="/profile"
+            className={`navItem ${isActive("/profile")}`}
+          >
             <CgProfile className="fs-1" />
           </Nav.Link>
-          <LuLogOut
+
+          {/* <LuLogOut
             className="fs-1 textPrimary"
             onClick={() => {
               localStorage.clear();
-              nav("/login");
+              navigate("/login");
             }}
-            key={4}
-          />
-        </>,
-      ];
+            style={{ cursor: "pointer" }}
+          /> */}
+        </>
+      );
     } else {
-      return [
+      return (
         <>
-          <Nav.Link href="/signup" key={0}>
-            <li className="navItem textPrimary">Signup</li>
+          <Nav.Link
+            href="/signup"
+            className={`navItem textPrimary ${isActive("/signup")}`}
+          >
+            Signup
           </Nav.Link>
-          <Nav.Link href="/login" key={1}>
-            <li className="navItem textPrimary">Login</li>
+          <Nav.Link
+            href="/login"
+            className={`navItem textPrimary ${isActive("/login")}`}
+          >
+            Login
           </Nav.Link>
-        </>,
-      ];
+        </>
+      );
     }
   };
+
   return (
     <>
+      {/* Desktop version */}
       <div className="container-fluid headerNavLarge sticky-top bg-light p-1">
         <div className="container">
-          <div className="d-flex justify-content-between aligin-items-center">
+          <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex align-items-center">
               <div className="mt-2" style={{ width: "43px", height: "40px" }}>
                 <img
-                  alt=""
+                  alt="icon"
                   src="/icon.png"
                   style={{ width: "100%", height: "100%" }}
                 />
               </div>
               <div className="logoImgTop">
                 <img
-                  alt=""
+                  alt="logo"
                   src="/logo2.png"
                   style={{ width: "100%", height: "100%" }}
                   onClick={() =>
-                    !state.user || !state.user.id ? nav("/login") : nav("/")
+                    !state.user || !state.user.id
+                      ? navigate("/login")
+                      : navigate("/")
                   }
                 />
               </div>
             </div>
+
             <ul className="navListLarg">{loginStatus()}</ul>
           </div>
         </div>
       </div>
+
+      {/* Mobile version */}
       <div className="headerNavPhone sticky-top bg-light p-1">
         <div className="d-flex ms-1">
           <div className="mt-2" style={{ width: "36px", height: "32px" }}>
             <img
-              alt=""
+              alt="icon"
               src="/icon.png"
               style={{ width: "100%", height: "100%" }}
             />
           </div>
-          <div className="logoImgTop ">
+          <div className="logoImgTop">
             <img
-              alt=""
+              alt="logo"
               src="/logo2.png"
               style={{ width: "100%", height: "100%" }}
               onClick={() =>
-                !state.user || !state.user.id ? nav("/login") : nav("/")
+                !state.user || !state.user.id
+                  ? navigate("/login")
+                  : navigate("/")
               }
             />
           </div>
         </div>
+
         <ul className="navList">{loginStatusPhone()}</ul>
       </div>
     </>

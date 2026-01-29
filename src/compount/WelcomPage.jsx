@@ -5,14 +5,20 @@ import axios from "axios";
 import { BASEURL } from "../config/config";
 import { payloadTypes } from "../context/reducer";
 import { AppContext, useAppContext } from "../context/context";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 function WelcomPage() {
   const { state } = useAppContext(AppContext);
   const [error, setError] = useState("");
   const [data, setData] = useState("");
+  const isOnline = useIsOnline();
 
   const handleTestApi = async () => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.get(`${BASEURL}/test/check`, {
         headers: {
           "Content-Type": "application/json",
@@ -29,6 +35,10 @@ function WelcomPage() {
 
   const handleHealthCheckApi = async () => {
     try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
+      }
       const res = await axios.get(`${BASEURL}/health`, {
         headers: {
           "Content-Type": "application/json",
