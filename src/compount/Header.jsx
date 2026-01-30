@@ -26,6 +26,9 @@ function Header() {
             Home
           </Nav.Link>
 
+          <Nav.Link href="/chat" className={`navItem ${isActive("/chat")}`}>
+            Chat
+          </Nav.Link>
           <Nav.Link
             href="/profile"
             className={`navItem ${isActive("/profile")}`}
@@ -86,6 +89,10 @@ function Header() {
         <>
           <Nav.Link href="/" className={`navItem ${isActive("/")}`}>
             <AiFillHome className="fs-1" />
+          </Nav.Link>
+
+          <Nav.Link href="/chat" className={`navItem ${isActive("/chat")}`}>
+            <VscDiffAdded className="fs-1" />
           </Nav.Link>
 
           <Nav.Link

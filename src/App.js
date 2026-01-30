@@ -20,6 +20,8 @@ import { payloadTypes } from "./context/reducer";
 import axios from "axios";
 import { BASEURL } from "./config/config";
 import TestPage from "./screens/TestPage";
+import ChatScreen from "./screens/ChatScreen";
+import Chat from "./compount/ChatPage";
 
 function MainPage() {
   return (
@@ -48,6 +50,8 @@ function MainPage() {
         <Route path="/welcom" element={<WelcomPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SingUpPage />} />
+        <Route path="/chat" element={<ChatScreen />} />
+        <Route path="/chat/:conversationId/friend/:friendId" element={<Chat />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/createpost" element={<Post pageType={"General"}/>} />
