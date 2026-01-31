@@ -3,7 +3,6 @@ import { socket } from "./socket";
 import axios from "axios";
 import { BASEURL, config } from "../config/config";
 import { AppContext } from "../context/context";
-import { useIsOnline } from "../hooks/useIsOnline";
 import { useParams } from "react-router-dom";
 // import { io } from "socket.io-client";
 import Header from "./Header";
@@ -17,14 +16,12 @@ const Chat = () => {
   const [text, setText] = useState("");
   const [typing, setTyping] = useState(false);
   const { state } = useContext(AppContext);
-  const isOnline = useIsOnline();
   const { conversationId, friendId } = useParams();
 
   // join socket
   useEffect(() => {
-    if (state.user && state.user.id && isOnline)
-      socket.emit("join", state.user.id);
-  }, [state.user, isOnline]);
+    if (state.user && state.user.id) socket.emit("join", state.user.id);
+  }, [state.user]);
 
   // receive message realtime
   useEffect(() => {
@@ -36,17 +33,18 @@ const Chat = () => {
     socket.on("stopTyping", () => setTyping(false));
 
     socket.on("messageSeen", () => {
-      console.log("Seen ✓✓");
+      setMessages((prev) =>
+        prev.map((m) => ({
+          ...m,
+          isRead: true,
+        }))
+      );
     });
   }, []);
 
   // send message
   const sendMessage = async () => {
-    if (!isOnline) {
-      alert("No internet connection. Please check your network.");
-      return;
-    }
-    if (conversationId) {
+    try {
       const res = await axios.post(
         `${BASEURL}/chat/message`,
         {
@@ -61,22 +59,40 @@ const Chat = () => {
 
       setMessages([...messages, res.data]);
       setText("");
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    const connectUser = async () => {
+    if (!messages.length) return;
+
+    const unread = messages.filter(
+      (m) => m.sender !== state.user.id && !m.isRead
+    );
+    if (unread.length > 0) {
+      socket.emit("seen", {
+        conversationId,
+        to: friendId,
+      });
+    }
+  }, [messages, conversationId, friendId, state.user.id]);
+
+  useEffect(() => {
+    // GET /api/chat/messages/:conversationId
+    const getMessages = async () => {
       try {
-       await axios.post(
-          `${BASEURL}/chat/conversation/${friendId}`,
-          {},
+        const res = await axios.get(
+          `${BASEURL}/chat/messages/${conversationId}`,
           config
         );
+
+        setMessages(res.data);
       } catch (error) {
         console.log(error);
       }
     };
-    if (!conversationId) connectUser();
+    getMessages();
   }, []);
 
   // typing
@@ -96,7 +112,7 @@ const Chat = () => {
         {messages.map((m, i) => (
           <div key={i}>
             {m.text}
-            {m.isRead && " ✓✓"}
+            {m.sender === state.user.id && <>{m.isRead ? " ✓✓" : " ✓"}</>}
           </div>
         ))}
 

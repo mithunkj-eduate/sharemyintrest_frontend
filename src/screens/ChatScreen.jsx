@@ -89,6 +89,20 @@ export default function ChatScreen() {
     };
   }, [state.user]);
 
+  const connectUser = async (friendId) => {
+    try {
+      const res = await axios.post(
+        `${BASEURL}/chat/conversation/${friendId}`,
+        {},
+        config
+      );
+      console.log(res.data, "convertions");
+      nav(`/chat/${res.data._id}/friend/${friendId}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // --------------------------
   // OPEN CHAT
   // --------------------------
@@ -128,7 +142,7 @@ export default function ChatScreen() {
                             key={item._id}
                             className="d-flex gap-3 p-1"
                             onClick={() => {
-                              nav(`/chat/0/friend/${item._id}`);
+                              connectUser(item._id);
                             }}
                           >
                             <div className="postImgTop">
