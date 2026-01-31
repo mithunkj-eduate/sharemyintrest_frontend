@@ -51,13 +51,19 @@ function MainPage() {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SingUpPage />} />
         <Route path="/chat" element={<ChatScreen />} />
-        <Route path="/chat/:conversationId/friend/:friendId" element={<Chat />} />
+
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/createpost" element={<Post pageType={"General"}/>} />
+        <Route path="/createpost" element={<Post pageType={"General"} />} />
         <Route path="/postdetails" element={<PostDetail />} />
         <Route path="/profile/:userId" element={<UserProfile />} />
         <Route path="/followingpost" element={<FollowingPost />} />
+        <Route path="/linkpost/:id" element={<LinkPost />}></Route>
+
+        <Route
+          path="/chat/:conversationId/friend/:friendId"
+          element={<Chat />}
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>

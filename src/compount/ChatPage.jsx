@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { socket } from "./socket";
 import axios from "axios";
-import { BASEURL, config } from "../config/config";
+import { BASEURL, config, config1 } from "../config/config";
 import { AppContext } from "../context/context";
 import { useNavigate, useParams } from "react-router-dom";
 // import { io } from "socket.io-client";
@@ -77,17 +77,20 @@ const Chat = () => {
   }, []);
 
   // send message
-  const sendMessage = async () => {
+  const sendMessage = async (mediaUrl, messageType) => {
     try {
-      const res = await axios.post(
-        `${BASEURL}/chat/message`,
-        {
-          conversationId: conversationId,
-          receiver: friendId,
-          text,
-        },
-        config
-      );
+      let body = {
+        conversationId: conversationId,
+        receiver: friendId,
+        text,
+      };
+      if (mediaUrl) {
+        body.media = mediaUrl;
+      }
+      if (messageType) {
+        body.messageType = messageType;
+      }
+      const res = await axios.post(`${BASEURL}/chat/message`, body, config);
 
       socket.emit("sendMessage", res.data);
 
@@ -168,6 +171,31 @@ const Chat = () => {
     return () => document.body.classList.remove("chat-page");
   }, []);
 
+  const handleFileUpload = async (e) => {
+    try {
+      const file = e.target.files[0];
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await axios.post(
+        `${BASEURL}/chat/uploads`,
+        formData,
+        config1
+      );
+
+      const messageType = file.type.startsWith("image")
+        ? "image"
+        : file.type.startsWith("audio")
+        ? "audio"
+        : "file";
+
+      sendMessage(res.data.mediaUrl, messageType);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="" style={{ marginBottom: "0px" }}>
       <div className="d-flex flex-column vh-100 bg-light">
@@ -211,7 +239,6 @@ const Chat = () => {
         >
           {messages.map((m, i) => {
             const isMe = m.sender === state.user.id;
-
             return (
               <div
                 key={i}
@@ -223,9 +250,37 @@ const Chat = () => {
                   className={`p-2 px-3 rounded shadow-sm ${
                     isMe ? "bg-primary text-white" : "bg-white"
                   }`}
-                  style={{ maxWidth: "65%" }}
+                  style={{ maxWidth: "65%", overflow: "hidden" }}
                 >
-                  {m.text}
+                  {m.messageType === "text" && <p>{m.text}</p>}
+
+                  {m.messageType === "image" && (
+                    <img
+                      src={`${BASEURL}${m.media}`}
+                      width={200}
+                      alt={m.media}
+                    />
+                  )}
+
+                  {m.messageType === "audio" && (
+                    <audio controls src={`${BASEURL}${m.media}`} />
+                  )}
+
+                  {m.messageType === "file" && (
+                    <a
+                      href={`${BASEURL}${m.media}`}
+                      style={{ color: "#fff" }}
+                      download
+                    >
+                      📎 Download File
+                    </a>
+                  )}
+
+                  {m.messageType === "link" && (
+                    <a href={m.text} style={{ color: "#fff" }}>
+                      {m.text}
+                    </a>
+                  )}
 
                   {isMe && (
                     <div className="small text-end mt-1">
@@ -251,6 +306,8 @@ const Chat = () => {
               handleTyping();
             }}
           />
+
+          <input type="file" onChange={handleFileUpload} />
 
           <button className="btn btn-primary" onClick={sendMessage}>
             Send

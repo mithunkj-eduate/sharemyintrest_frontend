@@ -171,6 +171,33 @@ const Home = () => {
     );
   };
 
+  // const handleShareSubmitOld = async () => {
+  //   if (!isOnline) {
+  //     alert("No internet connection. Please check your network.");
+  //     return;
+  //   }
+  //   try {
+  //     const link = `${BASEURL2}/linkpost/${currentPostId}`;
+  //     const formdata = new FormData();
+  //     formdata.append("link", link);
+  //     formdata.append("body", shareMessage);
+  //     for (let id of selectedIds) {
+  //       formdata.append("receivedBy", id);
+  //     }
+  //     const res = await axios.post(
+  //       `${BASEURL}/messages/message`,
+  //       formdata,
+  //       config
+  //     );
+  //     if (res.status === 200) {
+  //       alert("Message sent successfully");
+  //       handleCloseShare();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   const handleShareSubmit = async () => {
     if (!isOnline) {
       alert("No internet connection. Please check your network.");
@@ -178,18 +205,18 @@ const Home = () => {
     }
     try {
       const link = `${BASEURL2}/linkpost/${currentPostId}`;
-      const formdata = new FormData();
-      formdata.append("link", link);
-      formdata.append("body", shareMessage);
-      for (let id of selectedIds) {
-        formdata.append("receivedBy", id);
-      }
+
       const res = await axios.post(
-        `${BASEURL}/messages/message`,
-        formdata,
+        `${BASEURL}/chat/share`,
+        {
+          receivers: selectedIds,
+          text: link,
+          messageType: "link",
+        },
         config
       );
-      if (res.status === 200) {
+
+      if (res.data) {
         alert("Message sent successfully");
         handleCloseShare();
       }
