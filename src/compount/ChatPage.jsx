@@ -163,8 +163,13 @@ const Chat = () => {
     }, 1000);
   };
 
+  useEffect(() => {
+    document.body.classList.add("chat-page");
+    return () => document.body.classList.remove("chat-page");
+  }, []);
+
   return (
-    <div className="">
+    <div className="" style={{ marginBottom: "0px" }}>
       <div className="d-flex flex-column vh-100 bg-light">
         {/* <Header /> */}
 
