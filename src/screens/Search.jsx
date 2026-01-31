@@ -68,55 +68,51 @@ function Search() {
               {user.length || posts.length !== 0 ? (
                 <>
                   <div className="searchResult">
-                    {user.map((item) => {
+                    {user.map((item, i) => {
                       return (
-                        <>
-                          <div
-                            key={item._id}
-                            className="d-flex gap-3 p-1"
-                            onClick={() => {
-                              nav(
-                                state.user.id === item._id
-                                  ? "/profile"
-                                  : `/profile/${item._id}`
-                              );
-                            }}
-                          >
-                            <div className="postImgTop">
-                              <img
-                                alt=""
-                                className="userImg"
-                                src={
-                                  item.Photo
-                                    ? `${BASEURL}${item.Photo}`
-                                    : "/images/personicon.jpg"
-                                }
-                              />
-                            </div>
-                            <p>{item.userName}</p>
+                        <div
+                          key={i}
+                          className="d-flex gap-3 p-1"
+                          onClick={() => {
+                            nav(
+                              state.user.id === item._id
+                                ? "/profile"
+                                : `/profile/${item._id}`
+                            );
+                          }}
+                        >
+                          <div className="postImgTop">
+                            <img
+                              alt=""
+                              className="userImg"
+                              src={
+                                item.Photo
+                                  ? `${BASEURL}${item.Photo}`
+                                  : "/images/personicon.jpg"
+                              }
+                            />
                           </div>
-                        </>
+                          <p>{item.userName}</p>
+                        </div>
                       );
                     })}
                   </div>
                   <div className="rowCard">
-                    {posts.map((item) => {
+                    {posts.map((item, index) => {
                       return (
-                        <>
-                          <div className="column">
-                            <img
-                              alt=""
-                              key={item._id}
-                              src={
-                                item.photo
-                                  ? `${BASEURL}${item.photo}`
-                                  : "/images/personicon.jpg"
-                              }
-                              className="innerImg"
-                              target="_blank"
-                            />
-                          </div>
-                        </>
+                        <div className="column" key={index}>
+                          <img
+                            alt=""
+                            key={item._id}
+                            src={
+                              item.photo
+                                ? `${BASEURL}${item.photo}`
+                                : "/images/personicon.jpg"
+                            }
+                            className="innerImg"
+                            target="_blank"
+                          />
+                        </div>
                       );
                     })}
                   </div>

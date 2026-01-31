@@ -223,6 +223,20 @@ function UserProfile() {
     };
   }, [ref]);
 
+  const connectUser = async (friendId) => {
+    try {
+      const res = await axios.post(
+        `${BASEURL}/chat/conversation/${friendId}`,
+        {},
+        config
+      );
+      console.log(res.data, "convertions");
+      nav(`/chat/${res.data._id}/friend/${friendId}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -281,7 +295,14 @@ function UserProfile() {
               >
                 {isFollow === false ? "Follow" : "Unfollow"}
               </button>
-              <Message />
+
+              <button
+                className="btn button m-2 p-2"
+                onClick={() => connectUser(userId)}
+              >
+                Message
+              </button>
+              {/* <Message /> */}
             </div>
           </div>
         </div>
