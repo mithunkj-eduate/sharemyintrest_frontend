@@ -6,6 +6,6 @@ import { io } from "socket.io-client";
 // });
 
 // production
-export const socket = io("https://snap.shareurinterest.com", {
+export const socket = io("https://api.shareurinterest.com", {
   transports: ["websocket"],
 });
