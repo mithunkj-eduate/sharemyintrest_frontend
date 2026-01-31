@@ -1,60 +1,67 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { config } from "../config/config";
 import { useNavigate } from "react-router-dom";
 import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
+import useDebounce from "../hooks/useDebounce";
 
 function Search() {
   const [text, setText] = useState("");
   const [user, setUser] = useState([]);
   const [posts, setPosts] = useState([]);
   const [value, setValue] = useState("");
-  const {state} =useAppContext(AppContext)
+  const { state } = useAppContext(AppContext);
 
   const nav = useNavigate();
- 
+  let limit = 10;
+
   const isOnline = useIsOnline();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (text !== "") {
-      try {
-        if (!isOnline) {
-          alert("No internet connection. Please check your network.");
-          return;
-        }
-        const res = await axios.get(
-          `${BASEURL}/user/searchUser?key=${text}`,
-          config
-        );
-        const resData = await res.data.user;
-        console.log(res);
-        setUser(resData);
-        const resPost = await res.data.post;
-        setPosts(resPost);
-      } catch (error) {
-        console.log(error);
-        alert(error.response.data.message);
+  const debouncedSearchText = useDebounce(text, 500);
+
+  const handleSubmit = async () => {
+    try {
+      if (!isOnline) {
+        alert("No internet connection. Please check your network.");
+        return;
       }
+      const res = await axios.get(
+        `${BASEURL}/user/searchUser?key=${debouncedSearchText}&&limit=${limit}`,
+        config
+      );
+      const resData = await res.data.user;
+      console.log(res);
+      setUser(resData);
+      const resPost = await res.data.post;
+      setPosts(resPost);
+    } catch (error) {
+      console.log(error);
+      alert(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    if (debouncedSearchText) {
+      handleSubmit();
+    }
+  }, [debouncedSearchText]);
 
   return (
     <>
       <div className="container searchContainer">
-        <form onSubmit={handleSubmit}>
-          <input
-            onChange={(e) => {
-              setText(e.target.value);
-              setValue(e.target.value);
-            }}
-            type="text"
-            className="form-control m-2"
-            placeholder="Search"
-          />
-        </form>
+        {/* <form onSubmit={handleSubmit}> */}
+        <input
+          onChange={(e) => {
+            setText(e.target.value);
+            setValue(e.target.value);
+          }}
+          type="text"
+          className="form-control m-2"
+          placeholder="Search"
+        />
+        {/* </form> */}
         <div>
           {value !== "" ? (
             <>
@@ -81,7 +88,7 @@ function Search() {
                                 className="userImg"
                                 src={
                                   item.Photo
-                                    ? `${BASEURL}${item.Photo}`  
+                                    ? `${BASEURL}${item.Photo}`
                                     : "/images/personicon.jpg"
                                 }
                               />
@@ -100,7 +107,11 @@ function Search() {
                             <img
                               alt=""
                               key={item._id}
-                              src={item.photo ? `${BASEURL}${item.photo}`  : "/images/personicon.jpg"}
+                              src={
+                                item.photo
+                                  ? `${BASEURL}${item.photo}`
+                                  : "/images/personicon.jpg"
+                              }
                               className="innerImg"
                               target="_blank"
                             />
@@ -114,7 +125,7 @@ function Search() {
                 <img
                   alt=""
                   src="/images/search.jpg"
-                  style={{ width: "100%" }}
+                  style={{ width: "50%", margin: "0 25%" }}
                 />
               )}
             </>

@@ -3,9 +3,10 @@ import { socket } from "./socket";
 import axios from "axios";
 import { BASEURL, config } from "../config/config";
 import { AppContext } from "../context/context";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // import { io } from "socket.io-client";
-import Header from "./Header";
+// import Header from "./Header";
+import { FaArrowLeft } from "react-icons/fa6";
 
 // const socket = io("http://localhost:9000", {
 //   transports: ["websocket"],
@@ -17,10 +18,12 @@ const Chat = () => {
   const [typing, setTyping] = useState(false);
   const { state } = useContext(AppContext);
   const { conversationId, friendId } = useParams();
+  const [isOnline, setIsOnline] = useState(false);
+  const [user, setUser] = useState();
+  const nav = useNavigate();
 
   const messagesEndRef = useRef(null);
   const bottomRef = useRef(null);
-
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -31,7 +34,6 @@ const Chat = () => {
       behavior: "smooth", // or "auto"
     });
   }, [messages.length]);
-  
 
   // join socket
   useEffect(() => {
@@ -40,11 +42,17 @@ const Chat = () => {
 
   // receive message realtime
   useEffect(() => {
+    const onlineUsers = (list) => {
+      const online = list.includes(friendId);
+      if (online) setIsOnline(true);
+    };
     const receive = (msg) => {
       setMessages((prev) => [...prev, msg]);
     };
 
     socket.on("receiveMessage", receive);
+
+    socket.on("onlineUsers", onlineUsers);
 
     // socket.on("receiveMessage", (msg) => {
     //   setMessages((prev) => [...prev, msg]);
@@ -63,6 +71,7 @@ const Chat = () => {
     });
 
     return () => {
+      socket.off("onlineUsers", onlineUsers);
       socket.off("receiveMessage", receive);
     };
   }, []);
@@ -103,14 +112,13 @@ const Chat = () => {
   //   }
   // }, [messages, conversationId, friendId, state.user.id]);
 
-
   useEffect(() => {
     if (!messages.length) return;
-  
+
     const hasUnread = messages.some(
       (m) => m.sender !== state.user.id && !m.isRead
     );
-  
+
     if (hasUnread) {
       socket.emit("seen", {
         conversationId,
@@ -118,9 +126,17 @@ const Chat = () => {
       });
     }
   }, [messages]);
-  
 
   useEffect(() => {
+    const getUserById = async () => {
+      try {
+        const res = await axios.get(`${BASEURL}/user/${friendId}`, config);
+
+        setUser(res.data.user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     // GET /api/chat/messages/:conversationId
     const getMessages = async () => {
       try {
@@ -135,6 +151,7 @@ const Chat = () => {
       }
     };
     getMessages();
+    getUserById();
   }, []);
 
   // typing
@@ -147,64 +164,93 @@ const Chat = () => {
   };
 
   return (
-    <div className="d-flex flex-column vh-100 bg-light">
-      {/* <Header /> */}
+    <div className="">
+      <div className="d-flex flex-column vh-100 bg-light">
+        {/* <Header /> */}
 
-      {/* Messages */}
-      <div
-        className="flex-grow-1 overflow-auto p-3"
-        style={{ background: "#e5ddd5" }}
-        // ref={messagesEndRef}
-      >
-        {messages.map((m, i) => {
-          const isMe = m.sender === state.user.id;
+        <div className="d-flex align-items-center p-3 border-bottom cursor-pointer hover-bg">
+          <div onClick={() => nav(-1)}>
+            <FaArrowLeft className="fs-1 me-2" />
+          </div>
+          <div className="position-relative me-3">
+            <img
+              className="rounded-circle"
+              width={45}
+              height={45}
+              src={
+                user?.Photo
+                  ? `${BASEURL}${user?.Photo}`
+                  : "/images/personicon.jpg"
+              }
+              alt=""
+            />
 
-          return (
-            <div
-              key={i}
-              className={`d-flex mb-2 ${
-                isMe ? "justify-content-end" : "justify-content-start"
-              }`}
-            >
+            {isOnline && (
+              <span
+                className="position-absolute bottom-0 end-0 bg-success rounded-circle"
+                style={{ width: 10, height: 10 }}
+              />
+            )}
+          </div>
+
+          <div className="flex-grow-1">
+            <div className="fw-bold">{user?.userName}</div>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div
+          className="flex-grow-1 overflow-auto p-3"
+          style={{ background: "#e5ddd5" }}
+          // ref={messagesEndRef}
+        >
+          {messages.map((m, i) => {
+            const isMe = m.sender === state.user.id;
+
+            return (
               <div
-                className={`p-2 px-3 rounded shadow-sm ${
-                  isMe ? "bg-primary text-white" : "bg-white"
+                key={i}
+                className={`d-flex mb-2 ${
+                  isMe ? "justify-content-end" : "justify-content-start"
                 }`}
-                style={{ maxWidth: "65%" }}
               >
-                {m.text}
+                <div
+                  className={`p-2 px-3 rounded shadow-sm ${
+                    isMe ? "bg-primary text-white" : "bg-white"
+                  }`}
+                  style={{ maxWidth: "65%" }}
+                >
+                  {m.text}
 
-                {isMe && (
-                  <div className="small text-end mt-1">
-                    {m.isRead ? "✓✓" : "✓"}
-                  </div>
-                )}
-
-
+                  {isMe && (
+                    <div className="small text-end mt-1">
+                      {m.isRead ? "✓✓" : "✓"}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
-<div ref={bottomRef} />
+            );
+          })}
+          <div ref={bottomRef} />
+        </div>
+        {typing && <div className="text-muted small">Typing...</div>}
 
-      </div>
-      {typing && <div className="text-muted small">Typing...</div>}
+        {/* Input */}
+        <div className="p-2 border-top bg-white d-flex gap-2">
+          <input
+            className="form-control"
+            placeholder="Type message..."
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value);
+              handleTyping();
+            }}
+          />
 
-      {/* Input */}
-      <div className="p-2 border-top bg-white d-flex gap-2">
-        <input
-          className="form-control"
-          placeholder="Type message..."
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            handleTyping();
-          }}
-        />
-
-        <button className="btn btn-primary" onClick={sendMessage}>
-          Send
-        </button>
+          <button className="btn btn-primary" onClick={sendMessage}>
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );

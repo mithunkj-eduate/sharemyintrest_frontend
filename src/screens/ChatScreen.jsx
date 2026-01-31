@@ -7,6 +7,7 @@ import { AppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import { useNavigate } from "react-router-dom";
 import { timeAgo } from "../compount/helper/utlity";
+import useDebounce from "../hooks/useDebounce";
 // import { io } from "socket.io-client";
 
 // const socket = io("http://localhost:9000", {
@@ -25,30 +26,35 @@ export default function ChatScreen() {
   const [posts, setPosts] = useState([]);
   const [value, setValue] = useState("");
 
-  const isOnline = useIsOnline();
+  const debouncedSearchText = useDebounce(text, 500);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (text !== "") {
-      try {
-        if (!isOnline) {
-          alert("No internet connection. Please check your network.");
-          return;
-        }
-        const res = await axios.get(
-          `${BASEURL}/user/searchUser?key=${text}`,
-          config
-        );
-        const resData = await res.data.user;
-        setUser(resData);
-        const resPost = await res.data.post;
-        setPosts(resPost);
-      } catch (error) {
-        console.log(error);
-        alert(error.response.data.message);
+  let limit = 10;
+
+  const handleSubmit = async () => {
+    try {
+      if (!isOnline1) {
+        alert("No internet connection. Please check your network.");
+        return;
       }
+      const res = await axios.get(
+        `${BASEURL}/user/searchUser?key=${debouncedSearchText}&&limit=${limit}`,
+        config
+      );
+      const resData = await res.data.user;
+      setUser(resData);
+      const resPost = await res.data.post;
+      setPosts(resPost);
+    } catch (error) {
+      console.log(error);
+      alert(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    if (debouncedSearchText) {
+      handleSubmit();
+    }
+  }, [debouncedSearchText]);
 
   // --------------------------
   // Fetch chat list
@@ -111,128 +117,188 @@ export default function ChatScreen() {
   };
 
   return (
-    <div className="h-screen bg-gray-100">
+    <>
       <Header />
 
-      {/* Header */}
-      <div className="p-4 bg-green-600 text-white text-xl font-bold">Chats</div>
+      <div className="container feed-container">
+        <div className="row">
+          <div className="col-lg-4 col-md-6 mx-auto">
+            <div className="h-screen bg-gray-100">
+              {/* Header */}
+              <div className="p-4 text-dark">Chats</div>
 
-      <div className="container searchContainer">
-        <form onSubmit={handleSubmit}>
-          <input
-            onChange={(e) => {
-              setText(e.target.value);
-              setValue(e.target.value);
-            }}
-            type="text"
-            className="form-control m-2"
-            placeholder="Search"
-          />
-        </form>
-        <div>
-          {value !== "" ? (
-            <>
-              {user.length || posts.length !== 0 ? (
-                <>
-                  <div className="searchResult">
-                    {user.map((item) => {
-                      return (
+              <div className="container searchContainer">
+                {/* <form onSubmit={handleSubmit}> */}
+                <input
+                  onChange={(e) => {
+                    setText(e.target.value);
+                    setValue(e.target.value);
+                  }}
+                  type="text"
+                  className="form-control m-2"
+                  placeholder="Search ..."
+                />
+                {/* </form> */}
+                <div>
+                  {value !== "" ? (
+                    <>
+                      {user.length || posts.length !== 0 ? (
                         <>
-                          <div
-                            key={item._id}
-                            className="d-flex gap-3 p-1"
-                            onClick={() => {
-                              connectUser(item._id);
-                            }}
-                          >
-                            <div className="postImgTop">
-                              <img
-                                alt=""
-                                className="userImg"
-                                src={
-                                  item.Photo
-                                    ? `${BASEURL}${item.Photo}`
-                                    : "/images/personicon.jpg"
-                                }
-                              />
-                            </div>
-                            <p>{item.userName}</p>
+                          <div className="searchResult">
+                            {user.map((item) => {
+                              return (
+                                <>
+                                  <div
+                                    key={item._id}
+                                    className="d-flex gap-3 p-1"
+                                    onClick={() => {
+                                      connectUser(item._id);
+                                    }}
+                                  >
+                                    <div className="postImgTop">
+                                      <img
+                                        alt=""
+                                        className="userImg"
+                                        src={
+                                          item.Photo
+                                            ? `${BASEURL}${item.Photo}`
+                                            : "/images/personicon.jpg"
+                                        }
+                                      />
+                                    </div>
+                                    <p>{item.userName}</p>
+                                  </div>
+                                </>
+                              );
+                            })}
                           </div>
                         </>
-                      );
-                    })}
-                  </div>
-                </>
-              ) : (
-                <img
-                  alt=""
-                  src="/images/search.jpg"
-                  style={{ width: "100%" }}
-                />
-              )}
-            </>
-          ) : (
-            ""
-          )}
-        </div>
-      </div>
-
-      {/* List */}
-      <div>
-        {state.user &&
-          state.user.id &&
-          users.map((c) => {
-            const friend = c.participants.find((p) => p._id !== state.user.id);
-            const isOnline = onlineUsers.includes(friend._id);
-
-            const commentTime = timeAgo(c.updatedAt);
-
-            return (
-              <div
-                key={c._id}
-                onClick={() => openChat(c._id, friend._id)}
-                className="flex items-center gap-3 p-3 border-b cursor-pointer hover:bg-gray-200"
-              >
-                {/* Avatar */}
-                <div className="relative">
-                  <div key={friend._id} className="d-flex gap-3 mb-2">
-                    <div className="postImgTop">
-                      <img
-                        alt=""
-                        className="userImg"
-                        src={
-                          friend.Photo
-                            ? `${BASEURL}${friend.Photo}`
-                            : "/images/personicon.jpg"
-                        }
-                      />
-                      {isOnline && (
-                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full" />
+                      ) : (
+                        <img
+                          alt=""
+                          src="/images/search.jpg"
+                          style={{ width: "50%", margin: "0 25%" }}
+                        />
                       )}
-                    </div>
-                    {/* <p>{friend.userName}</p> */}
-                    <div className="flex-1">
-                      <p>{friend.userName}</p>
-
-                      <p className="text-sm text-gray-500 truncate">
-                        {c.lastMessage?.text || "Start chatting"}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-gray-400">{commentTime}</p>
-
-                      {c.unreadCount > 0 && (
-                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                          {c.unreadCount}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                    </>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
-            );
-          })}
+
+              {/* List */}
+              <div>
+                {state.user &&
+                  state.user.id &&
+                  users.map((c) => {
+                    const friend = c.participants.find(
+                      (p) => p._id !== state.user.id
+                    );
+                    const isOnline = onlineUsers.includes(friend._id);
+
+                    const commentTime = timeAgo(c.updatedAt);
+
+                    return (
+                      <div
+                        key={c._id}
+                        onClick={() => openChat(c._id, friend._id)}
+                        className="d-flex align-items-center p-3 border-bottom cursor-pointer hover-bg"
+                      >
+                        {/* Avatar */}
+                        <div className="position-relative me-3">
+                          <img
+                            className="rounded-circle"
+                            width={45}
+                            height={45}
+                            src={
+                              friend.Photo
+                                ? `${BASEURL}${friend.Photo}`
+                                : "/images/personicon.jpg"
+                            }
+                            alt=""
+                          />
+
+                          {isOnline && (
+                            <span
+                              className="position-absolute bottom-0 end-0 bg-success rounded-circle"
+                              style={{ width: 10, height: 10 }}
+                            />
+                          )}
+                        </div>
+
+                        {/* Middle */}
+                        <div className="flex-grow-1">
+                          <div className="fw-bold">{friend.userName}</div>
+
+                          <div className="text-muted small text-truncate">
+                            {c.lastMessage?.text || "Start chatting"}
+                          </div>
+                        </div>
+
+                        {/* Right */}
+                        <div className="text-end">
+                          <div className="small text-muted">{commentTime}</div>
+
+                          {c.unreadCount > 0 && (
+                            <span className="badge bg-success rounded-pill">
+                              {c.unreadCount}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+
+                    // return (
+                    //   <div
+                    //     key={c._id}
+                    //     onClick={() => openChat(c._id, friend._id)}
+                    //     className="flex items-center gap-3 p-3 border-b cursor-pointer hover:bg-gray-200"
+                    //   >
+                    //     {/* Avatar */}
+                    //     <div className="relative">
+                    //       <div key={friend._id} className="d-flex gap-3 mb-2">
+                    //         <div className="postImgTop">
+                    //           <img
+                    //             alt=""
+                    //             className="userImg"
+                    //             src={
+                    //               friend.Photo
+                    //                 ? `${BASEURL}${friend.Photo}`
+                    //                 : "/images/personicon.jpg"
+                    //             }
+                    //           />
+                    //           {isOnline && (
+                    //             <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full" />
+                    //           )}
+                    //         </div>
+                    //         {/* <p>{friend.userName}</p> */}
+                    //         <div className="flex-1">
+                    //           <p>{friend.userName}</p>
+
+                    //           <p className="text-sm text-gray-500 truncate">
+                    //             {c.lastMessage?.text || "Start chatting"}
+                    //           </p>
+                    //         </div>
+                    //         <div className="text-right">
+                    //           <p className="text-xs text-gray-400">{commentTime}</p>
+
+                    //           {c.unreadCount > 0 && (
+                    //             <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                    //               {c.unreadCount}
+                    //             </span>
+                    //           )}
+                    //         </div>
+                    //       </div>
+                    //     </div>
+                    //   </div>
+                    // );
+                  })}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

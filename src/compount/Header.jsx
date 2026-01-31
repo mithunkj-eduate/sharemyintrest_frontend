@@ -5,9 +5,10 @@ import { AiFillHome } from "react-icons/ai";
 import { VscDiffAdded } from "react-icons/vsc";
 import { RiMovieFill } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
-import { LuLogOut } from "react-icons/lu";
+// import { LuLogOut } from "react-icons/lu";
 import { AppContext, useAppContext } from "../context/context";
 import "../style/header.css";
+import { FaLocationArrow } from "react-icons/fa6";
 
 function Header() {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ function Header() {
           </Nav.Link>
 
           <Nav.Link href="/chat" className={`navItem ${isActive("/chat")}`}>
-            <VscDiffAdded className="fs-1" />
+            <FaLocationArrow className="fs-1" />
           </Nav.Link>
 
           <Nav.Link
