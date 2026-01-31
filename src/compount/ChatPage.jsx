@@ -91,7 +91,7 @@ const Chat = () => {
 
       socket.emit("sendMessage", res.data);
 
-      // setMessages([...messages, res.data]);
+      setMessages([...messages, res.data]);
       setText("");
     } catch (error) {
       console.log(error);
