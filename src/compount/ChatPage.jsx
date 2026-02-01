@@ -24,13 +24,20 @@ const Chat = () => {
   const [user, setUser] = useState();
   const nav = useNavigate();
   const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState();
 
   const [file, setFile] = useState();
   const [url, setUrl] = useState();
 
-  const bottomRef = useRef(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
+  let limit = 20;
+
+  const scrollRef = useRef(null);
+  const bottomRef = useRef(null);
   const hiddenFileInput = useRef(null);
+
   const handalClick = () => {
     hiddenFileInput.current.click();
   };
@@ -153,19 +160,19 @@ const Chat = () => {
       }
     };
     // GET /api/chat/messages/:conversationId
-    const getMessages = async () => {
-      try {
-        const res = await axios.get(
-          `${BASEURL}/chat/messages/${conversationId}`,
-          config
-        );
+    // const getMessages = async () => {
+    //   try {
+    //     const res = await axios.get(
+    //       `${BASEURL}/chat/messages/${conversationId}`,
+    //       config
+    //     );
 
-        setMessages(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getMessages();
+    //     setMessages(res.data);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+    // getMessages();
     getUserById();
   }, []);
 
@@ -246,6 +253,72 @@ const Chat = () => {
     }
   };
 
+  // -------------------------
+  // fetch messages (pagination)
+  // -------------------------
+  const getMessages = async (pageNo = 1) => {
+    if (loading) return; // 🔥 STOP MULTIPLE CALLS
+
+    setLoading(true);
+
+    const el = scrollRef.current;
+    const oldHeight = el?.scrollHeight;
+
+    const res = await axios.get(
+      `${BASEURL}/chat/messages/${conversationId}?page=${pageNo}&limit=${limit}`,
+      config
+    );
+
+    const newMsgs = res.data;
+
+    if (newMsgs.length === 0) {
+      setHasMore(false);
+      setLoading(false);
+      return;
+    }
+
+    setMessages((prev) => (pageNo === 1 ? newMsgs : [...newMsgs, ...prev]));
+
+    setTimeout(() => {
+      if (pageNo !== 1) {
+        el.scrollTop = el.scrollHeight - oldHeight;
+      } else {
+        bottomRef.current?.scrollIntoView();
+      }
+    }, 0);
+
+    setLoading(false); // 🔥 unlock
+  };
+
+  useEffect(() => {
+    getMessages(1);
+  }, [conversationId]);
+
+  // -------------------------
+  // infinite scroll top
+  // -------------------------
+  let scrollTimer = null;
+
+  const handleScroll = () => {
+    if (scrollTimer) return;
+
+    scrollTimer = setTimeout(() => {
+      scrollTimer = null;
+
+      const el = scrollRef.current;
+
+      if (loading || !hasMore) return;
+
+      if (el.scrollTop <= 20) {
+        setPage((p) => {
+          const next = p + 1;
+          getMessages(next);
+          return next;
+        });
+      }
+    }, 200);
+  };
+
   return (
     <div className="">
       <div className="d-flex flex-column vh-100 bg-light">
@@ -287,6 +360,8 @@ const Chat = () => {
         )}
         {/* Messages */}
         <div
+          ref={scrollRef}
+          onScroll={handleScroll}
           className="flex-grow-1 overflow-auto p-3"
           style={{ background: "#e5ddd5" }}
         >
