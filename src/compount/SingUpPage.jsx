@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 import { signUpSchema } from "./helper/Validation";
-import { GoogleLogin } from "@react-oauth/google";
+// import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 import { BASEURL } from "../config/config";
-import { errormessage, successmessage } from "./helper/Toastify";
+// import { errormessage, successmessage } from "./helper/Toastify";
 import Header from "./Header";
 import { useIsOnline } from "../hooks/useIsOnline";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { Form, InputGroup } from "react-bootstrap";
 
 const initialValues = {
   user: "",
@@ -23,6 +25,8 @@ const initialValues = {
 
 function SingUpPage() {
   const isOnline = useIsOnline();
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const nav = useNavigate();
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -37,12 +41,15 @@ function SingUpPage() {
             alert("No internet connection. Please check your network.");
             return;
           }
+          setLoading(true);
           const res = await axios.post(`${BASEURL}/auth/register`, values);
           nav("/login");
         } catch (error) {
           console.log(error);
           // errormessage(error.response.data.message);
           alert(error.response.data.message);
+        } finally {
+          setLoading(false);
         }
         action.resetForm();
       },
@@ -74,16 +81,18 @@ function SingUpPage() {
 
   return (
     <>
-    <Header />
+      <Header />
       <div className="container">
         <div className="row">
           <div className="col-lg-8 m-auto">
             <div className="border p-5 rounded ">
               <h1 className="section__title">Sign Up</h1>
-              <form onSubmit={(e) =>{
-                e.preventDefault();
-                handleSubmit(e)
-              }}>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }}
+              >
                 <div className="mb-2 ">
                   <label htmlFor="user" className="form-label  mb-1 mb-1">
                     User
@@ -186,7 +195,31 @@ function SingUpPage() {
                   >
                     Confirm Password
                   </label>
-                  <input
+                  <InputGroup className="mb-3">
+                    <Form.Control
+                      aria-label="Recipient's username"
+                      aria-describedby="basic-addon2"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="on"
+                      name="confirm_password"
+                      id="confirm_password"
+                      placeholder="Enter Confirm Password"
+                      value={values.confirm_password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="form-control"
+                    />
+                    <InputGroup.Text id="basic-addon2">
+                      {showPassword ? (
+                        <FaEye onClick={() => setShowPassword(!showPassword)} />
+                      ) : (
+                        <FaEyeSlash
+                          onClick={() => setShowPassword(!showPassword)}
+                        />
+                      )}
+                    </InputGroup.Text>
+                  </InputGroup>
+                  {/* <input
                     type="password"
                     autoComplete="on"
                     name="confirm_password"
@@ -196,14 +229,14 @@ function SingUpPage() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="form-control"
-                  />
+                  /> */}
                   {errors.confirm_password && touched.confirm_password ? (
                     <p className="form-error">{errors.confirm_password}</p>
                   ) : null}
                 </div>
 
                 <div className="text-center mt-2 mb-3 ">
-                  <button className="btn button w-100 p-2" type="submit">
+                  <button className="btn button w-100 p-2" type="submit" disabled={loading}>
                     Sign Up
                   </button>
                 </div>

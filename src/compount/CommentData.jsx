@@ -48,7 +48,7 @@ function CommentData({ values }) {
               const commentTime = timeAgo(postItem.date);
 
               return (
-                <>
+              
                   <div key={index}>
                     {postItem.postedBy._id === state.user.id ? (
                       <>
@@ -100,7 +100,7 @@ function CommentData({ values }) {
                       </>
                     )}
                   </div>
-                </>
+                
               );
             })}
           </div>

@@ -5,8 +5,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { logInSchema } from "./helper/Validation";
 import { BASEURL } from "../config/config";
-import { errormessage, successmessage } from "./helper/Toastify";
+// import { errormessage, successmessage } from "./helper/Toastify";
 import Header from "./Header";
+import { Form, InputGroup } from "react-bootstrap";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 const initialValues = {
   email: "",
   password: "",
@@ -15,6 +17,8 @@ const initialValues = {
 function Login() {
   const nav = useNavigate();
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
@@ -22,6 +26,8 @@ function Login() {
       validationSchema: logInSchema,
       onSubmit: async (values, action) => {
         try {
+          setLoading(true);
+
           const res = await axios.post(`${BASEURL}/auth/login`, values, {
             headers: {
               "Content-Type": "application/json",
@@ -39,16 +45,19 @@ function Login() {
           }
         } catch (error) {
           console.log(error);
-          setError(toString(error));
+          if (error.message) {
+            setError(JSON.stringify(error.message, null, 2));
+            alert(error.response.data.message);
+          }
           if (error.response.data.message) {
             // errormessage(error.response.data.message);
             alert(error.response.data.message);
-           
-            
           } else {
             // errormessage("server error");
             alert("server error");
           }
+        } finally {
+          setLoading(false);
         }
         action.resetForm();
       },
@@ -86,7 +95,32 @@ function Login() {
                   <label htmlFor="password" className="form-label mb-1">
                     Password
                   </label>
-                  <input
+                  <InputGroup className="mb-3">
+                    <Form.Control
+                      aria-label="Recipient's username"
+                      aria-describedby="basic-addon2"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="on"
+                      name="password"
+                      id="password"
+                      placeholder="Enter Password"
+                      value={values.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="form-control"
+                    />
+                    <InputGroup.Text id="basic-addon2">
+                      {showPassword ? (
+                        <FaEye onClick={() => setShowPassword(!showPassword)} />
+                      ) : (
+                        <FaEyeSlash
+                          onClick={() => setShowPassword(!showPassword)}
+                        />
+                      )}
+                    </InputGroup.Text>
+                  </InputGroup>
+
+                  {/* <input
                     type="password"
                     autoComplete="on"
                     name="password"
@@ -96,14 +130,18 @@ function Login() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="form-control"
-                  />
+                  /> */}
                   {errors.password && touched.password ? (
                     <p className="form-error">{errors.password}</p>
                   ) : null}
                 </div>
 
                 <div className="text-center mt-2 mb-3">
-                  <button className="btn button w-100 p-2" type="submit">
+                  <button
+                    className="btn button w-100 p-2"
+                    type="submit"
+                    disabled={loading}
+                  >
                     Login
                   </button>
                 </div>
