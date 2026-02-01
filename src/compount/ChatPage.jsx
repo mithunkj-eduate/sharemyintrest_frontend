@@ -7,6 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 // import { io } from "socket.io-client";
 // import Header from "./Header";
 import { FaArrowLeft } from "react-icons/fa6";
+import Header from "./Header";
+import { GrGallery } from "react-icons/gr";
 
 // const socket = io("http://localhost:9000", {
 //   transports: ["websocket"],
@@ -22,12 +24,15 @@ const Chat = () => {
   const [user, setUser] = useState();
   const nav = useNavigate();
 
-  const messagesEndRef = useRef(null);
+  const [file, setFile] = useState();
+  const [url, setUrl] = useState();
+
   const bottomRef = useRef(null);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  const hiddenFileInput = useRef(null);
+  const handalClick = () => {
+    hiddenFileInput.current.click();
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
@@ -93,14 +98,16 @@ const Chat = () => {
       const res = await axios.post(`${BASEURL}/chat/message`, body, config);
 
       socket.emit("sendMessage", res.data);
-
-      setMessages([...messages, res.data]);
+      console.log(res.data, "sfsf");
+      setMessages((prev) => [...prev, res.data]);
       setText("");
+      setFile();
+      setUrl("");
     } catch (error) {
       console.log(error);
     }
   };
-
+  console.log(messages);
   // useEffect(() => {
   //   if (!messages.length) return;
 
@@ -171,10 +178,8 @@ const Chat = () => {
     return () => document.body.classList.remove("chat-page");
   }, []);
 
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = async () => {
     try {
-      const file = e.target.files[0];
-
       const formData = new FormData();
       formData.append("file", file);
 
@@ -197,13 +202,13 @@ const Chat = () => {
   };
 
   return (
-    <div className="" style={{ marginBottom: "0px" }}>
+    <div className="">
       <div className="d-flex flex-column vh-100 bg-light">
-        {/* <Header /> */}
+        <Header />
 
         <div className="d-flex align-items-center p-3 border-bottom cursor-pointer hover-bg">
           <div onClick={() => nav(-1)}>
-            <FaArrowLeft className="fs-1 me-2" />
+            <FaArrowLeft className="fs-3 me-2" />
           </div>
           <div className="position-relative me-3">
             <img
@@ -230,12 +235,10 @@ const Chat = () => {
             <div className="fw-bold">{user?.userName}</div>
           </div>
         </div>
-
         {/* Messages */}
         <div
           className="flex-grow-1 overflow-auto p-3"
           style={{ background: "#e5ddd5" }}
-          // ref={messagesEndRef}
         >
           {messages.map((m, i) => {
             const isMe = m.sender === state.user.id;
@@ -293,11 +296,21 @@ const Chat = () => {
           })}
           <div ref={bottomRef} />
         </div>
+
         {typing && <div className="text-muted small">Typing...</div>}
 
         {/* Input */}
+
+        {url ? (
+          <div className="col-md-2 p-2">
+            <div className="w-25">
+              <img alt="" src={url} />
+            </div>
+          </div>
+        ) : null}
+        
         <div className="p-2 border-top bg-white d-flex gap-2">
-          <input
+          {/* <input
             className="form-control"
             placeholder="Type message..."
             value={text}
@@ -305,13 +318,54 @@ const Chat = () => {
               setText(e.target.value);
               handleTyping();
             }}
-          />
+          /> */}
 
-          <input type="file" onChange={handleFileUpload} />
+          <textarea
+            id="message"
+            value={text}
+            placeholder="Type message..."
+            onChange={(e) => {
+              setText(e.target.value);
+              handleTyping();
+            }}
+            className="form-control"
+            name="textarea"
+            rows="1"
+            cols="40"
+            style={{ maxHeight: "120px" }}
+          ></textarea>
 
-          <button className="btn btn-primary" onClick={sendMessage}>
+          {/* <input type="file" onChange={handleFileUpload} /> */}
+          <GrGallery className="fs-2 text-light" onClick={handalClick} />
+
+          <button
+            className="btn btn-primary"
+            onClick={async () => {
+              if (!file || !text) return;
+              if (file && text) {
+                await handleFileUpload();
+                await sendMessage();
+              } else if (file) {
+                handleFileUpload();
+              } else {
+                sendMessage();
+              }
+            }}
+          >
             Send
           </button>
+
+          <input
+            type="file"
+            ref={hiddenFileInput}
+            onChange={(e) => {
+              setFile(e.target.files[0]);
+              setUrl(URL.createObjectURL(e.target.files[0]));
+            }}
+            accept="image/*"
+            className="form-control"
+            style={{ display: "none" }}
+          />
         </div>
       </div>
     </div>
