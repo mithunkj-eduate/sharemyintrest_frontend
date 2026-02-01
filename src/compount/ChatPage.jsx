@@ -7,8 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 // import { io } from "socket.io-client";
 // import Header from "./Header";
 import { FaArrowLeft } from "react-icons/fa6";
-import Header from "./Header";
 import { GrGallery } from "react-icons/gr";
+import { MdDelete } from "react-icons/md";
 
 // const socket = io("http://localhost:9000", {
 //   transports: ["websocket"],
@@ -23,6 +23,7 @@ const Chat = () => {
   const [isOnline, setIsOnline] = useState(false);
   const [user, setUser] = useState();
   const nav = useNavigate();
+  const [progress, setProgress] = useState(0);
 
   const [file, setFile] = useState();
   const [url, setUrl] = useState();
@@ -100,14 +101,18 @@ const Chat = () => {
       socket.emit("sendMessage", res.data);
       console.log(res.data, "sfsf");
       setMessages((prev) => [...prev, res.data]);
-      setText("");
-      setFile();
-      setUrl("");
+      handleClear();
     } catch (error) {
       console.log(error);
     }
   };
   console.log(messages);
+  const handleClear = () => {
+    setText("");
+    setFile();
+    setUrl("");
+    setProgress(0);
+  };
   // useEffect(() => {
   //   if (!messages.length) return;
 
@@ -183,11 +188,12 @@ const Chat = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await axios.post(
-        `${BASEURL}/chat/uploads`,
-        formData,
-        config1
-      );
+      const res = await axios.post(`${BASEURL}/chat/uploads`, formData, {
+        ...config1,
+        onUploadProgress: (e) => {
+          setProgress(Math.round((e.loaded * 100) / e.total));
+        },
+      });
 
       const messageType = file.type.startsWith("image")
         ? "image"
@@ -204,7 +210,7 @@ const Chat = () => {
   return (
     <div className="">
       <div className="d-flex flex-column vh-100 bg-light">
-        <Header />
+        {/* <Header /> */}
 
         <div className="d-flex align-items-center p-3 border-bottom cursor-pointer hover-bg">
           <div onClick={() => nav(-1)}>
@@ -235,6 +241,11 @@ const Chat = () => {
             <div className="fw-bold">{user?.userName}</div>
           </div>
         </div>
+        {progress > 0 && (
+          <div className="progress">
+            <div className="progress-bar" style={{ width: `${progress}%` }} />
+          </div>
+        )}
         {/* Messages */}
         <div
           className="flex-grow-1 overflow-auto p-3"
@@ -302,13 +313,21 @@ const Chat = () => {
         {/* Input */}
 
         {url ? (
-          <div className="col-md-2 p-2">
-            <div className="w-25">
-              <img alt="" src={url} />
+          <div className="col-md-4 p-2">
+            <div className="w-25 position-relative">
+              <img alt="" src={url} className="w-100" />
+
+              <MdDelete
+                className="position-absolute top-0 end-0 fs-3 bg-light"
+                onClick={() => {
+                  setUrl(null);
+                  setFile();
+                }}
+              />
             </div>
           </div>
         ) : null}
-        
+
         <div className="p-2 border-top bg-white d-flex gap-2">
           {/* <input
             className="form-control"
