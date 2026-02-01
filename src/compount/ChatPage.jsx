@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 // import Header from "./Header";
 import { FaArrowLeft } from "react-icons/fa6";
 import { GrGallery } from "react-icons/gr";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineFileDownload } from "react-icons/md";
 
 // const socket = io("http://localhost:9000", {
 //   transports: ["websocket"],
@@ -207,6 +207,45 @@ const Chat = () => {
     }
   };
 
+  //download image get method
+  const downloadFile = async (id) => {
+    try {
+      await fetch(`${BASEURL}/chat/downloadFile/${id}`, config)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch image");
+          }
+          // Read the response as blob data
+          return response.blob();
+        })
+        .then((blob) => {
+          // Create a blob URL for the image blob data
+          const imageUrl = URL.createObjectURL(blob);
+          // Set the src attribute of the image element to the blob URL
+          // document.getElementById('image').src = imageUrl;
+
+          // Create a link element
+          const link = document.createElement("a");
+          link.href = imageUrl;
+          link.download = "sharemyinstrest.jpg"; // Set the filename here
+
+          // Append the link to the document body
+          document.body.appendChild(link);
+
+          // Trigger the download
+          link.click();
+
+          // Remove the link from the document body
+          document.body.removeChild(link);
+        })
+        .catch((error) => {
+          console.error("Error fetching image:", error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="">
       <div className="d-flex flex-column vh-100 bg-light">
@@ -269,11 +308,23 @@ const Chat = () => {
                   {m.messageType === "text" && <p>{m.text}</p>}
 
                   {m.messageType === "image" && (
-                    <img
-                      src={`${BASEURL}${m.media}`}
-                      width={200}
-                      alt={m.media}
-                    />
+                    <>
+                      <div className="position-relative">
+                        <img
+                          src={`${BASEURL}${m.media}`}
+                          width={200}
+                          alt={m.media}
+                        />
+                        <MdOutlineFileDownload
+                          className={
+                            m.media
+                              ? "position-absolute start-0 bottom-0  fs-2 text-dark bg-light rounded-circle"
+                              : "d-none"
+                          }
+                          onClick={() => downloadFile(m._id)}
+                        />
+                      </div>
+                    </>
                   )}
 
                   {m.messageType === "audio" && (

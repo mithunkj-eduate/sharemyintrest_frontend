@@ -392,7 +392,7 @@ function Message() {
   //download image get method
   const downloadFile = async (id) => {
     try {
-      await fetch(`${BASEURL}/messages/downloadFile/${id}`, config)
+      await fetch(`${BASEURL}/chat/downloadFile/${id}`, config)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to fetch image");
