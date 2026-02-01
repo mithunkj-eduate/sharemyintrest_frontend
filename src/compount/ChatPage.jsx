@@ -1,4 +1,10 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { socket } from "./socket";
 import axios from "axios";
 import { BASEURL, config, config1 } from "../config/config";
@@ -34,9 +40,10 @@ const Chat = () => {
 
   let limit = 20;
 
-  const scrollRef = useRef(null);
   const bottomRef = useRef(null);
   const hiddenFileInput = useRef(null);
+  const scrollRef = useRef(null);
+  const previousHeight = useRef(0);
 
   const handalClick = () => {
     hiddenFileInput.current.click();
@@ -257,12 +264,15 @@ const Chat = () => {
   // fetch messages (pagination)
   // -------------------------
   const getMessages = async (pageNo = 1) => {
-    if (loading) return; // 🔥 STOP MULTIPLE CALLS
+    if (loading) return;
 
     setLoading(true);
 
     const el = scrollRef.current;
-    const oldHeight = el?.scrollHeight;
+
+    if (pageNo !== 1) {
+      previousHeight.current = el.scrollHeight; // 🔥 store BEFORE fetch
+    }
 
     const res = await axios.get(
       `${BASEURL}/chat/messages/${conversationId}?page=${pageNo}&limit=${limit}`,
@@ -279,15 +289,7 @@ const Chat = () => {
 
     setMessages((prev) => (pageNo === 1 ? newMsgs : [...newMsgs, ...prev]));
 
-    setTimeout(() => {
-      if (pageNo !== 1) {
-        el.scrollTop = el.scrollHeight - oldHeight;
-      } else {
-        bottomRef.current?.scrollIntoView();
-      }
-    }, 0);
-
-    setLoading(false); // 🔥 unlock
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -318,6 +320,22 @@ const Chat = () => {
       }
     }, 200);
   };
+
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+
+    if (!el) return;
+
+    // first load → go bottom
+    if (page === 1) {
+      bottomRef.current?.scrollIntoView();
+    }
+    // pagination → keep same position
+    else {
+      const newHeight = el.scrollHeight;
+      el.scrollTop = newHeight - previousHeight.current;
+    }
+  }, [page]);
 
   return (
     <div className="">
@@ -486,7 +504,7 @@ const Chat = () => {
           <button
             className="btn btn-primary"
             onClick={async () => {
-              if (!file || !text) return;
+              if (!file && !text) return;
               if (file && text) {
                 await handleFileUpload();
                 await sendMessage();
