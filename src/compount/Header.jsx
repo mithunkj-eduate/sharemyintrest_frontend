@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Nav } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
@@ -9,11 +9,14 @@ import { CgProfile } from "react-icons/cg";
 import { AppContext, useAppContext } from "../context/context";
 import "../style/header.css";
 import { FaLocationArrow } from "react-icons/fa6";
+import { LuSquareDot } from "react-icons/lu";
+import RightDrawer from "./helper/RightDrawer";
 
 function Header() {
   const navigate = useNavigate();
   const location = useLocation(); // ← this gives us current path
   const { state } = useAppContext(AppContext);
+  const [show, setShow] = useState(false);
 
   const isActive = (path) => {
     return location.pathname === path ? "active" : "";
@@ -54,14 +57,18 @@ function Header() {
           {/* Optional: Logout as link/button */}
           {/* <li
             onClick={() => {
-              localStorage.clear();
-              navigate("/login");
+              // localStorage.clear();
+              // navigate("/login");
+              setShow(true)
             }}
             className="navItem textPrimary pointer"
             style={{ cursor: "pointer" }}
           >
             Log Out
           </li> */}
+          <li className={`navItem ${isActive("/createpost")}`}>
+            <LuSquareDot onClick={() => setShow(true)} />
+          </li>
         </>
       );
     } else {
@@ -117,11 +124,12 @@ function Header() {
             <CgProfile className="fs-1" />
           </Nav.Link>
 
-          {/* <LuLogOut
+          {/* <LuSquareDot
             className="fs-1 textPrimary"
             onClick={() => {
-              localStorage.clear();
-              navigate("/login");
+              // localStorage.clear();
+              // navigate("/login");
+              setShow(true);
             }}
             style={{ cursor: "pointer" }}
           /> */}
@@ -202,10 +210,19 @@ function Header() {
               }
             />
           </div>
+          {location.pathname === "/login" ||
+          location.pathname === "/signup" ||
+          location.pathname === "/welcome" ? null : (
+            <div className={`navItem ${isActive("/createpost")}`}>
+              <LuSquareDot onClick={() => setShow(true)} />
+            </div>
+          )}
         </div>
 
         <ul className="navList">{loginStatusPhone()}</ul>
       </div>
+
+      <RightDrawer show={show} setShow={setShow} />
     </>
   );
 }

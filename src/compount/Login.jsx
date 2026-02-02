@@ -47,7 +47,7 @@ function Login() {
           console.log(error);
           if (error.message) {
             setError(JSON.stringify(error.message, null, 2));
-            alert(error.response.data.message);
+            alert(error.message);
           }
           if (error.response.data.message) {
             // errormessage(error.response.data.message);
