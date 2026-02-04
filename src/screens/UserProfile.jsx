@@ -15,6 +15,7 @@ import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
 import { timeAgo } from "../compount/helper/utlity";
 import { useIsOnline } from "../hooks/useIsOnline";
+import intercepter from "../server/intercepter";
 
 function UserProfile() {
   const { userId } = useParams();
@@ -47,7 +48,7 @@ function UserProfile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/user/${userId}?limit=${limit}`,
         config
       );
@@ -93,7 +94,7 @@ function UserProfile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/user/follow`,
         { followId: userId },
         config
@@ -115,7 +116,7 @@ function UserProfile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/user/unfollow`,
         { followId: userId },
         config
@@ -138,7 +139,7 @@ function UserProfile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/like`,
         { postId: id },
         config
@@ -164,7 +165,7 @@ function UserProfile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
         config
@@ -191,7 +192,7 @@ function UserProfile() {
         return;
       }
       if (comment !== "") {
-        const res = await axios.put(
+        const res = await intercepter.put(
           `${BASEURL}/post/comment`,
           { text: comment, postId: id },
           config
@@ -225,7 +226,7 @@ function UserProfile() {
 
   const connectUser = async (friendId) => {
     try {
-      const res = await axios.post(
+      const res = await intercepter.post(
         `${BASEURL}/chat/conversation/${friendId}`,
         {},
         config
@@ -350,7 +351,7 @@ function Message() {
   //get messages
   const getMessages = async () => {
     try {
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/messages/message?receivedBy=${userId}`,
         config
       );
@@ -370,7 +371,7 @@ function Message() {
 
     if (file) formdata.append("photo", file);
     try {
-      const res = await axios.post(
+      const res = await intercepter.post(
         `${BASEURL}/messages/message`,
         formdata,
         config

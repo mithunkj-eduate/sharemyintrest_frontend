@@ -14,6 +14,7 @@ import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
 import { useIsOnline } from "../hooks/useIsOnline";
+import intercepter from "../server/intercepter";
 
 function FollowingPost() {
   const nav = useNavigate();
@@ -41,7 +42,7 @@ function FollowingPost() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/user/followingpost?limit=${limit}&skip=${skip}`,
         config
       );
@@ -60,7 +61,7 @@ function FollowingPost() {
       setStories(resData.stories);
 
       // Fetch and set stories (assumed not paginated, so overwrite)
-      const resStories = await axios.get(
+      const resStories = await intercepter.get(
         `${BASEURL}/stories/allStories`,
         config
       );
@@ -89,7 +90,7 @@ function FollowingPost() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/like`,
         { postId: id },
         config
@@ -115,7 +116,7 @@ function FollowingPost() {
         return;
       }
 
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
         config
@@ -141,7 +142,7 @@ function FollowingPost() {
         return;
       }
       if (comment !== "") {
-        const res = await axios.put(
+        const res = await intercepter.put(
           `${BASEURL}/post/comment`,
           { text: comment, postId: id },
           config

@@ -22,6 +22,7 @@ import { BASEURL } from "./config/config";
 import TestPage from "./screens/TestPage";
 import ChatScreen from "./screens/ChatScreen";
 import Chat from "./compount/ChatPage";
+import intercepter from "./server/intercepter";
 
 function MainPage() {
   return (
@@ -132,7 +133,7 @@ export const LoggedUser = () => {
 
   const getUser = async () => {
     try {
-      const res = await axios.get(`${BASEURL}/verify`, {
+      const res = await intercepter.get(`${BASEURL}/verify`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

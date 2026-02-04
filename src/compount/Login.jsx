@@ -9,6 +9,7 @@ import { BASEURL } from "../config/config";
 import Header from "./Header";
 import { Form, InputGroup } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
+
 const initialValues = {
   email: "",
   password: "",
@@ -41,7 +42,9 @@ function Login() {
 
             // successmessage("login successfuly");
             alert("login successfuly");
-            nav("/welcom");
+            // nav("/welcom");
+        window.location.href = "/";
+
           }
         } catch (error) {
           console.log(error);

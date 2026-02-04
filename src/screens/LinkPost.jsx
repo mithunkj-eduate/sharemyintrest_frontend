@@ -6,6 +6,7 @@ import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import Header from "../compount/Header";
+import intercepter from "../server/intercepter";
 // import { AiOutlineHeart } from 'react-icons/ai'
 // import { FcLike } from 'react-icons/fc'
 // import { CiFaceSmile } from 'react-icons/ci'
@@ -25,7 +26,7 @@ const LinkPost = () => {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(`${BASEURL}/post/${params.id}`, config);
+      const res = await intercepter.get(`${BASEURL}/post/${params.id}`, config);
       const resData = await res.data.data;
       setPost(resData);
     } catch (error) {

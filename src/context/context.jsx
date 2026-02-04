@@ -4,6 +4,7 @@ import { payloadTypes, reducer } from "./reducer";
 import axios from "axios";
 import { BASEURL } from "../config/config";
 import { useIsOnline } from "../hooks/useIsOnline";
+import intercepter from "../server/intercepter";
 
 // ---------------- Initial State ----------------
 export const initialState = {
@@ -22,7 +23,6 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const isOnline = useIsOnline();
 
-
   const token = localStorage.getItem("smitoken") ?? "";
 
   const getUser = async () => {
@@ -31,13 +31,15 @@ const AppProvider = ({ children }) => {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(`${BASEURL}/verify`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await intercepter.get(`${BASEURL}/verify`);
 
+      // const res = await intercepter.get(`${BASEURL}/verify`, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+      console.log("interceptor response", res);
 
       if (res.status === 200 && res.data?.data) {
         const userData = res.data.data;

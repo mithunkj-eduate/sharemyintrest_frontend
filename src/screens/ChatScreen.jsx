@@ -8,6 +8,7 @@ import { useIsOnline } from "../hooks/useIsOnline";
 import { useNavigate } from "react-router-dom";
 import { timeAgo } from "../compount/helper/utlity";
 import useDebounce from "../hooks/useDebounce";
+import intercepter from "../server/intercepter";
 // import { io } from "socket.io-client";
 
 // const socket = io("http://localhost:9000", {
@@ -36,7 +37,7 @@ export default function ChatScreen() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/user/searchUser?key=${debouncedSearchText}&&limit=${limit}`,
         config
       );
@@ -60,7 +61,7 @@ export default function ChatScreen() {
   // Fetch chat list
   // --------------------------
   const fetchChats = async () => {
-    const res = await axios.get(`${BASEURL}/chat`, config);
+    const res = await intercepter.get(`${BASEURL}/chat`, config);
 
     setUsers(res.data);
   };
@@ -97,7 +98,7 @@ export default function ChatScreen() {
 
   const connectUser = async (friendId) => {
     try {
-      const res = await axios.post(
+      const res = await intercepter.post(
         `${BASEURL}/chat/conversation/${friendId}`,
         {},
         config

@@ -6,6 +6,7 @@ import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import useDebounce from "../hooks/useDebounce";
+import intercepter from "../server/intercepter";
 
 function Search() {
   const [text, setText] = useState("");
@@ -27,7 +28,7 @@ function Search() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/user/searchUser?key=${debouncedSearchText}&&limit=${limit}`,
         config
       );

@@ -11,6 +11,7 @@ import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
 import { useIsOnline } from "../hooks/useIsOnline";
+import intercepter from "../server/intercepter";
 
 function Profile() {
   const [comment, setComment] = useState("");
@@ -44,7 +45,7 @@ function Profile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/user/${state.user.id}?limit=${limit}`,
         config
       );
@@ -88,7 +89,7 @@ function Profile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/like`,
         { postId: id },
         config
@@ -114,7 +115,7 @@ function Profile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
         config
@@ -139,7 +140,7 @@ function Profile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/comment`,
         { text: comment, postId: id },
         config
@@ -165,7 +166,7 @@ function Profile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const resPost = await axios.put(
+      const resPost = await intercepter.put(
         `${BASEURL}/user/uploadProfilePic`,
         formdata,
         config
@@ -188,7 +189,7 @@ function Profile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/user/follow`,
         { followId: userId },
         config
@@ -210,7 +211,7 @@ function Profile() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/user/unfollow`,
         { followId: userId },
         config
@@ -227,7 +228,7 @@ function Profile() {
   };
 
   const deleteStory = async (id) => {
-    // const res = await axios.put(
+    // const res = await intercepter.put(
     //   "http://localhost:8000/user/deleteStory",
     //   { storyId: id },
     //   config1

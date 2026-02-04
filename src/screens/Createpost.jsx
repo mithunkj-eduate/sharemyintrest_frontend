@@ -120,7 +120,7 @@
 //         } else {
 //           setLoading(false);
 //         }
-//         const res = await axios.post(
+//         const res = await intercepter.post(
 //           "https://api.cloudinary.com/v1_1/myinstrestcloud/image/upload",
 //           data
 //         );
@@ -135,7 +135,7 @@
 //   const postFeatch = async () => {
 //     if (url) {
 //       try {
-//         const resPost = await axios.post(
+//         const resPost = await intercepter.post(
 //           "http://localhost:8000/post/createpost",
 //           { title, pic: url },
 //           config

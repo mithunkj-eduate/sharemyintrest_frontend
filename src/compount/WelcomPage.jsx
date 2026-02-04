@@ -6,6 +6,7 @@ import { BASEURL } from "../config/config";
 import { payloadTypes } from "../context/reducer";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
+import intercepter from "../server/intercepter";
 
 function WelcomPage() {
   const { state } = useAppContext(AppContext);
@@ -19,7 +20,8 @@ function WelcomPage() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(`${BASEURL}/test/check`, {
+      
+      const res = await intercepter.get(`${BASEURL}/test/check`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -39,7 +41,7 @@ function WelcomPage() {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const res = await axios.get(`${BASEURL}/health`, {
+      const res = await intercepter.get(`${BASEURL}/health`, {
         headers: {
           "Content-Type": "application/json",
         },

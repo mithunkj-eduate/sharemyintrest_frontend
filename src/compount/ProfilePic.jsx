@@ -83,7 +83,7 @@ function ProfilePic({ data }) {
   //   data.append("upload_preset", "myintrest");
   //   data.append("cloud_name", "myinstrestcloud");
 
-  //   const res = await axios.post(
+  //   const res = await intercepter.post(
   //     "https://api.cloudinary.com/v1_1/myinstrestcloud/image/upload",
   //     data
   //   );

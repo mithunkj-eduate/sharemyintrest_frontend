@@ -5,6 +5,7 @@ import Carousel from "react-bootstrap/Carousel";
 import { config, BASEURL } from "../../config/config";
 import axios from "axios";
 import { AppContext, useAppContext } from "../../context/context";
+import intercepter from "../../server/intercepter";
 
 function CarouselPage({ item, userData: user, authStory, deleteStory }) {
   
@@ -20,7 +21,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
 
   // const userStories = async () => {
   //   try {
-  //     const res = await axios.get(
+  //     const res = await intercepter.get(
   //       `${BASEURL}/stories/story/${userData.id}`,
   //       config
   //     );
@@ -206,7 +207,7 @@ function StoryViewersList({ story, userId }) {
   //get viewerslist
   const getViewerslist = async () => {
     try {
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/stories/storyViewerslist/${story._id}`,
         config
       );
@@ -294,7 +295,7 @@ function CarouselPage2({ userData: user }) {
 
   const userStories = async () => {
     try {
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/stories/story?userId=${state.user.id}&storyUserId=${userData.id}`,
         config
       );

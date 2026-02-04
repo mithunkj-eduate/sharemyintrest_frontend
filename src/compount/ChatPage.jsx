@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
 import { GrGallery } from "react-icons/gr";
 import { MdDelete, MdOutlineFileDownload } from "react-icons/md";
+import intercepter from "../server/intercepter";
 
 // const socket = io("http://localhost:9000", {
 //   transports: ["websocket"],
@@ -60,7 +61,7 @@ const Chat = () => {
     if (state.user && state.user.id) socket.emit("join", state.user.id);
   }, [state.user]);
 
-  // receive message realtime
+  // receive message realimport axios from "axios"time
   useEffect(() => {
     const onlineUsers = (list) => {
       const online = list.includes(friendId);
@@ -110,7 +111,7 @@ const Chat = () => {
       if (messageType) {
         body.messageType = messageType;
       }
-      const res = await axios.post(`${BASEURL}/chat/message`, body, config);
+      const res = await intercepter.post(`${BASEURL}/chat/message`, body, config);
 
       socket.emit("sendMessage", res.data);
       console.log(res.data, "sfsf");
@@ -159,7 +160,7 @@ const Chat = () => {
   useEffect(() => {
     const getUserById = async () => {
       try {
-        const res = await axios.get(`${BASEURL}/user/${friendId}`, config);
+        const res = await intercepter.get(`${BASEURL}/user/${friendId}`, config);
 
         setUser(res.data.user);
       } catch (error) {
@@ -169,7 +170,7 @@ const Chat = () => {
     // GET /api/chat/messages/:conversationId
     // const getMessages = async () => {
     //   try {
-    //     const res = await axios.get(
+    //     const res = await intercepter.get(
     //       `${BASEURL}/chat/messages/${conversationId}`,
     //       config
     //     );
@@ -202,7 +203,7 @@ const Chat = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await axios.post(`${BASEURL}/chat/uploads`, formData, {
+      const res = await intercepter.post(`${BASEURL}/chat/uploads`, formData, {
         ...config1,
         onUploadProgress: (e) => {
           setProgress(Math.round((e.loaded * 100) / e.total));
@@ -274,7 +275,7 @@ const Chat = () => {
       previousHeight.current = el.scrollHeight; // 🔥 store BEFORE fetch
     }
 
-    const res = await axios.get(
+    const res = await intercepter.get(
       `${BASEURL}/chat/messages/${conversationId}?page=${pageNo}&limit=${limit}`,
       config
     );

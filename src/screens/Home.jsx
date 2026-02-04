@@ -14,6 +14,7 @@ import Header from "../compount/Header";
 import CommentData from "../compount/CommentData";
 import "../style/photofeed.css";
 import { useIsOnline } from "../hooks/useIsOnline";
+import intercepter from "../server/intercepter";
 
 const Home = () => {
   const { state } = useAppContext(AppContext);
@@ -39,7 +40,7 @@ const Home = () => {
     try {
       if (isLoading) return;
       setIsLoading(true);
-      const res = await axios.get(
+      const res = await intercepter.get(
         `${BASEURL}/post/allposts?limit=${limit}&skip=${skip}`,
         config
       );
@@ -84,7 +85,7 @@ const Home = () => {
       return;
     }
     try {
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/like`,
         { postId: id },
         config
@@ -104,7 +105,7 @@ const Home = () => {
       return;
     }
     try {
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
         config
@@ -125,7 +126,7 @@ const Home = () => {
     }
     if (!comment.trim()) return;
     try {
-      const res = await axios.put(
+      const res = await intercepter.put(
         `${BASEURL}/post/comment`,
         { text: comment, postId: id },
         config
@@ -146,7 +147,7 @@ const Home = () => {
       return;
     }
     try {
-      const res = await axios.get(`${BASEURL}/user/followList`, config);
+      const res = await intercepter.get(`${BASEURL}/user/followList`, config);
       setFollowing(res.data.data[0].following);
     } catch (error) {
       console.error(error);
@@ -184,7 +185,7 @@ const Home = () => {
   //     for (let id of selectedIds) {
   //       formdata.append("receivedBy", id);
   //     }
-  //     const res = await axios.post(
+  //     const res = await intercepter.post(
   //       `${BASEURL}/messages/message`,
   //       formdata,
   //       config
@@ -206,7 +207,7 @@ const Home = () => {
     try {
       const link = `${BASEURL2}/linkpost/${currentPostId}`;
 
-      const res = await axios.post(
+      const res = await intercepter.post(
         `${BASEURL}/chat/share`,
         {
           receivers: selectedIds,

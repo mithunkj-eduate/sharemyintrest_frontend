@@ -9,6 +9,7 @@ import { FcLike } from "react-icons/fc";
 import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
+import intercepter from "../server/intercepter";
 
 function PostDetail({ data }) {
   const [show, setShow] = useState(false);
@@ -26,7 +27,7 @@ function PostDetail({ data }) {
           alert("No internet connection. Please check your network.");
           return;
         }
-        const res = await axios.delete(
+        const res = await intercepter.delete(
           `${BASEURL}/post/deletePost/${postId}`,
           config
         );

@@ -6,6 +6,7 @@ import { BASEURL } from "../config/config";
 import Header from "../compount/Header";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
+import intercepter from "../server/intercepter";
 
 function Post({ pageType }) {
   const [pic, setPic] = useState("/images/uplodeImg.jpg");
@@ -96,7 +97,7 @@ function Post({ pageType }) {
 
     if (image) {
       try {
-        const resPost = await axios.post(
+        const resPost = await intercepter.post(
           `${BASEURL}/post/createNewPost`,
           data,
           config1
@@ -127,7 +128,7 @@ function Post({ pageType }) {
         alert("No internet connection. Please check your network.");
         return;
       }
-      const resPost = await axios.post(
+      const resPost = await intercepter.post(
         `${BASEURL}/stories/createStory`,
         data,
         config1
