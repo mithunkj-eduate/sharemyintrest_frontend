@@ -16,6 +16,7 @@ import Header from "../compount/Header";
 import { timeAgo } from "../compount/helper/utlity";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "../compount/helper/SafImage";
 
 function UserProfile() {
   const { userId } = useParams();
@@ -244,7 +245,7 @@ function UserProfile() {
       <div className="container contenerUser">
         <div className="userInfo">
           <div className="userImgTop">
-            <img
+           <SafeImage
               alt=""
               className="innerImg"
               src={user?.Photo ? `${BASEURL}${user.Photo}` : "/images/user.png"}
@@ -469,7 +470,7 @@ function Message() {
                               <div className="message-orange">
                                 <div className="d-flex flex-wrap gap-3 mb-2">
                                   <div className="postImgTop">
-                                    <img
+                                   <SafeImage
                                       alt=""
                                       className="userImg"
                                       src={
@@ -500,7 +501,7 @@ function Message() {
                                 </div>
 
                                 <div className={postItem.photo ? "" : "d-none"}>
-                                  <img
+                                 <SafeImage
                                     alt=""
                                     className="userImg"
                                     src={
@@ -528,7 +529,7 @@ function Message() {
                               <div className="message-blue">
                                 <div className="d-flex flex-wrap gap-3 mb-2">
                                   <div className="postImgTop">
-                                    <img
+                                   <SafeImage
                                       alt=""
                                       className="userImg"
                                       src={
@@ -555,7 +556,7 @@ function Message() {
                                   </a>
                                 </div>
                                 <div className={postItem.photo ? "" : "d-none"}>
-                                  <img
+                                 <SafeImage
                                     alt=""
                                     className="userImg"
                                     src={
@@ -594,7 +595,7 @@ function Message() {
         <Modal.Footer>
           <div className="col-md-4 m-auto p-2">
             <div className="w-25">
-              <img alt="" src={url} />
+             <SafeImage alt="" src={url} />
             </div>
             <div className="d-flex gap-2 align-items-center">
               <CiFaceSmile className="fs-2" onClick={handalClick} />

@@ -7,6 +7,7 @@ import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import useDebounce from "../hooks/useDebounce";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "../compount/helper/SafImage";
 
 function Search() {
   const [text, setText] = useState("");
@@ -83,7 +84,7 @@ function Search() {
                           }}
                         >
                           <div className="postImgTop">
-                            <img
+                           <SafeImage
                               alt=""
                               className="userImg"
                               src={
@@ -102,7 +103,7 @@ function Search() {
                     {posts.map((item, index) => {
                       return (
                         <div className="column" key={index}>
-                          <img
+                         <SafeImage
                             alt=""
                             key={item._id}
                             src={
@@ -119,7 +120,7 @@ function Search() {
                   </div>
                 </>
               ) : (
-                <img
+               <SafeImage
                   alt=""
                   src="/images/search.jpg"
                   style={{ width: "50%", margin: "0 25%" }}

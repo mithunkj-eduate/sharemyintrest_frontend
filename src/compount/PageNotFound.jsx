@@ -1,12 +1,13 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
+import { SafeImage } from "./helper/SafImage";
 
 function PageNotFound() {
   return (
     <>
       <div className="container">
         <div className="col-lg-8 m-auto ">
-          <img alt="pagenotfound"
+         <SafeImage alt="pagenotfound"
             src="/images/pagenotfound.png"
             style={{ width: "100%", height: "100%" }}
           />

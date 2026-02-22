@@ -16,6 +16,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { GrGallery } from "react-icons/gr";
 import { MdDelete, MdOutlineFileDownload } from "react-icons/md";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "./helper/SafImage";
 
 // const socket = io("http://localhost:9000", {
 //   transports: ["websocket"],
@@ -38,6 +39,7 @@ const Chat = () => {
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [rowCount, setRowCount] = useState(1);
 
   let limit = 20;
 
@@ -87,7 +89,7 @@ const Chat = () => {
         prev.map((m) => ({
           ...m,
           isRead: true,
-        }))
+        })),
       );
     });
 
@@ -111,7 +113,11 @@ const Chat = () => {
       if (messageType) {
         body.messageType = messageType;
       }
-      const res = await intercepter.post(`${BASEURL}/chat/message`, body, config);
+      const res = await intercepter.post(
+        `${BASEURL}/chat/message`,
+        body,
+        config,
+      );
 
       socket.emit("sendMessage", res.data);
       console.log(res.data, "sfsf");
@@ -146,7 +152,7 @@ const Chat = () => {
     if (!messages.length) return;
 
     const hasUnread = messages.some(
-      (m) => m.sender !== state.user.id && !m.isRead
+      (m) => m.sender !== state.user.id && !m.isRead,
     );
 
     if (hasUnread) {
@@ -160,7 +166,10 @@ const Chat = () => {
   useEffect(() => {
     const getUserById = async () => {
       try {
-        const res = await intercepter.get(`${BASEURL}/user/${friendId}`, config);
+        const res = await intercepter.get(
+          `${BASEURL}/user/${friendId}`,
+          config,
+        );
 
         setUser(res.data.user);
       } catch (error) {
@@ -213,8 +222,8 @@ const Chat = () => {
       const messageType = file.type.startsWith("image")
         ? "image"
         : file.type.startsWith("audio")
-        ? "audio"
-        : "file";
+          ? "audio"
+          : "file";
 
       sendMessage(res.data.mediaUrl, messageType);
     } catch (error) {
@@ -277,7 +286,7 @@ const Chat = () => {
 
     const res = await intercepter.get(
       `${BASEURL}/chat/messages/${conversationId}?page=${pageNo}&limit=${limit}`,
-      config
+      config,
     );
 
     const newMsgs = res.data;
@@ -338,6 +347,14 @@ const Chat = () => {
     }
   }, [page]);
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (rowCount < 5) {
+        setRowCount((prev) => prev + 1);
+      }
+    }
+  };
+
   return (
     <div className="">
       <div className="d-flex flex-column vh-100 bg-light">
@@ -348,7 +365,7 @@ const Chat = () => {
             <FaArrowLeft className="fs-3 me-2" />
           </div>
           <div className="position-relative me-3">
-            <img
+            <SafeImage
               className="rounded-circle"
               width={45}
               height={45}
@@ -404,7 +421,7 @@ const Chat = () => {
                   {m.messageType === "image" && (
                     <>
                       <div className="position-relative">
-                        <img
+                        <SafeImage
                           src={`${BASEURL}${m.media}`}
                           width={200}
                           alt={m.media}
@@ -436,7 +453,7 @@ const Chat = () => {
                   )}
 
                   {m.messageType === "link" && (
-                    <a href={m.text} style={{ color: "#fff" }}>
+                    <a href={m.text} style={{ color: "black" }}>
                       {m.text}
                     </a>
                   )}
@@ -460,7 +477,7 @@ const Chat = () => {
         {url ? (
           <div className="col-md-4 p-2">
             <div className="w-25 position-relative">
-              <img alt="" src={url} className="w-100" />
+              <SafeImage alt="" src={url} className="w-100" />
 
               <MdDelete
                 className="position-absolute top-0 end-0 fs-3 bg-light"
@@ -492,32 +509,34 @@ const Chat = () => {
               setText(e.target.value);
               handleTyping();
             }}
+            onKeyDown={handleKeyDown}
             className="form-control"
             name="textarea"
-            rows="1"
+            rows={rowCount}
             cols="40"
             style={{ maxHeight: "120px" }}
           ></textarea>
 
           {/* <input type="file" onChange={handleFileUpload} /> */}
-          <GrGallery className="fs-2 text-light" onClick={handalClick} />
-
-          <button
-            className="btn btn-primary"
-            onClick={async () => {
-              if (!file && !text) return;
-              if (file && text) {
-                await handleFileUpload();
-                await sendMessage();
-              } else if (file) {
-                handleFileUpload();
-              } else {
-                sendMessage();
-              }
-            }}
-          >
-            Send
-          </button>
+          <GrGallery className="fs-2" onClick={handalClick} />
+          <div>
+            <button
+              className="btn btn-primary"
+              onClick={async () => {
+                if (!file && !text) return;
+                if (file && text) {
+                  await handleFileUpload();
+                  await sendMessage();
+                } else if (file) {
+                  handleFileUpload();
+                } else {
+                  sendMessage();
+                }
+              }}
+            >
+              Send
+            </button>
+          </div>
 
           <input
             type="file"

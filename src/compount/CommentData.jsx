@@ -5,6 +5,7 @@ import "../style/message.css";
 import { AppContext, useAppContext } from "../context/context";
 import { BASEURL } from "../config/config";
 import { timeAgo } from "./helper/utlity";
+import { SafeImage } from "./helper/SafImage";
 
 function CommentData({ values }) {
   const [show, setShow] = useState(false);
@@ -32,7 +33,7 @@ function CommentData({ values }) {
         </Modal.Header>
 
         <div className="commentImgTop">
-          <img alt="" src={item.photo ?`${BASEURL}${item.photo}` :"/images/user.png"} className="userImg" />
+         <SafeImage alt="" src={item.photo ?`${BASEURL}${item.photo}` :"/images/user.png"} className="userImg" />
         </div>
         <p className="text-center mb-0">Commnets</p>
         <div className="commentCardBody">
@@ -55,7 +56,7 @@ function CommentData({ values }) {
                         <div className="message-orange">
                           <div className="d-flex flex-wrap gap-3 mb-2">
                             <div className="postImgTop">
-                              <img alt=""
+                             <SafeImage alt=""
                                 className="userImg"
                                 src={
                                   postItem.postedBy.Photo
@@ -78,7 +79,7 @@ function CommentData({ values }) {
                         <div className="message-blue">
                           <div className="d-flex flex-wrap gap-3 mb-2">
                             <div className="postImgTop">
-                              <img alt=""
+                             <SafeImage alt=""
                                 className="userImg"
                                 src={
                                   postItem.postedBy.Photo

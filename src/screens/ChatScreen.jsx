@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { timeAgo } from "../compount/helper/utlity";
 import useDebounce from "../hooks/useDebounce";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "../compount/helper/SafImage";
 // import { io } from "socket.io-client";
 
 // const socket = io("http://localhost:9000", {
@@ -157,7 +158,7 @@ export default function ChatScreen() {
                                     }}
                                   >
                                     <div className="postImgTop">
-                                      <img
+                                     <SafeImage
                                         alt=""
                                         className="userImg"
                                         src={
@@ -175,7 +176,7 @@ export default function ChatScreen() {
                           </div>
                         </>
                       ) : (
-                        <img
+                       <SafeImage
                           alt=""
                           src="/images/search.jpg"
                           style={{ width: "50%", margin: "0 25%" }}
@@ -208,7 +209,7 @@ export default function ChatScreen() {
                       >
                         {/* Avatar */}
                         <div className="position-relative me-3">
-                          <img
+                         <SafeImage
                             className="rounded-circle"
                             width={45}
                             height={45}
@@ -260,7 +261,7 @@ export default function ChatScreen() {
                     //     <div className="relative">
                     //       <div key={friend._id} className="d-flex gap-3 mb-2">
                     //         <div className="postImgTop">
-                    //           <img
+                    //          <SafeImage
                     //             alt=""
                     //             className="userImg"
                     //             src={

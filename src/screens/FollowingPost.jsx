@@ -15,6 +15,7 @@ import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "../compount/helper/SafImage";
 
 function FollowingPost() {
   const nav = useNavigate();
@@ -208,7 +209,7 @@ function FollowingPost() {
                         className="cardUserInfo"
                       >
                         <div className="postImgTop">
-                          <img
+                         <SafeImage
                             alt=""
                             className="userImg"
                             src={
@@ -226,7 +227,7 @@ function FollowingPost() {
                     </div>
 
                     <figure>
-                      <img
+                     <SafeImage
                         alt=""
                         src={
                           item.photo

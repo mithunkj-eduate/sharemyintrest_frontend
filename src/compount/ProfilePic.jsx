@@ -2,6 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import React, { useEffect, useState, useRef } from "react";
 import Post from "../screens/Post";
 import { BASEURL } from "../config/config";
+import { SafeImage } from "./helper/SafImage";
 
 function ProfilePic({ data }) {
   const { user, changeProfilePhoto, setUrl } = data;
@@ -107,7 +108,7 @@ function ProfilePic({ data }) {
   return (
     <>
       <div className="userImgTop">
-        <img
+       <SafeImage
           alt=""
           onClick={() => setLgShow(true)}
           src={user.Photo ? `${BASEURL}${user.Photo}` : "/images/user.png"}

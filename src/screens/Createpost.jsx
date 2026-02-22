@@ -184,7 +184,7 @@
 //                 </div>
 
 //                 <figure>
-//                   <img
+//                  <SafeImage
 //                     className="w-100"
 //                     src={
 //                       userInfo.filepreview === null
@@ -197,7 +197,7 @@
 //               </div>
 //               <div className="userInfo">
 //                 <div className="createPostUser">
-//                   <img
+//                  <SafeImage
 //                     className="userImg"
 //                     src={
 //                       user.Photo

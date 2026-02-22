@@ -7,6 +7,7 @@ import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import Header from "../compount/Header";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "../compount/helper/SafImage";
 // import { AiOutlineHeart } from 'react-icons/ai'
 // import { FcLike } from 'react-icons/fc'
 // import { CiFaceSmile } from 'react-icons/ci'
@@ -57,7 +58,7 @@ const LinkPost = () => {
                   className="cardUserInfo"
                 >
                   <div className="postImgTop">
-                    <img
+                   <SafeImage
                       className="userImg"
                       src={
                         post.postedBy?.Photo
@@ -72,7 +73,7 @@ const LinkPost = () => {
               </div>
 
               <figure>
-                <img
+               <SafeImage
                   src={
                     post?.photo ? `${BASEURL}${post.photo}` : "/images/user.png"
                   }

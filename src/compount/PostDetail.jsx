@@ -10,6 +10,7 @@ import { BASEURL } from "../config/config";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "./helper/SafImage";
 
 function PostDetail({ data }) {
   const [show, setShow] = useState(false);
@@ -41,7 +42,7 @@ function PostDetail({ data }) {
   return (
     <>
       <div className="column" onClick={() => setShow(true)}>
-        <img
+       <SafeImage
           alt=""
           key={item._id}
           src={item.photo ? `${BASEURL}${item.photo}` : "/images/user.png"}
@@ -74,7 +75,7 @@ function PostDetail({ data }) {
         </Modal.Header>
 
         <div className="fullImgTop">
-          <img
+         <SafeImage
             alt=""
             src={item.photo ? `${BASEURL}${item.photo}` : "/images/user.png"}
             className="userImg"

@@ -15,6 +15,7 @@ import CommentData from "../compount/CommentData";
 import "../style/photofeed.css";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "../compount/helper/SafImage";
 
 const Home = () => {
   const { state } = useAppContext(AppContext);
@@ -42,7 +43,7 @@ const Home = () => {
       setIsLoading(true);
       const res = await intercepter.get(
         `${BASEURL}/post/allposts?limit=${limit}&skip=${skip}`,
-        config
+        config,
       );
       const resData = res.data.data;
       setAllPost((prevPosts) => {
@@ -67,7 +68,7 @@ const Home = () => {
         setSkip((prev) => prev + 20);
       }
     }, 200),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -88,11 +89,11 @@ const Home = () => {
       const res = await intercepter.put(
         `${BASEURL}/post/like`,
         { postId: id },
-        config
+        config,
       );
       const resData = res.data.data;
       setAllPost((prev) =>
-        prev.map((post) => (post._id === resData._id ? resData : post))
+        prev.map((post) => (post._id === resData._id ? resData : post)),
       );
     } catch (error) {
       console.error(error);
@@ -108,11 +109,11 @@ const Home = () => {
       const res = await intercepter.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
-        config
+        config,
       );
       const resData = res.data.data;
       setAllPost((prev) =>
-        prev.map((post) => (post._id === resData._id ? resData : post))
+        prev.map((post) => (post._id === resData._id ? resData : post)),
       );
     } catch (error) {
       console.error(error);
@@ -129,11 +130,11 @@ const Home = () => {
       const res = await intercepter.put(
         `${BASEURL}/post/comment`,
         { text: comment, postId: id },
-        config
+        config,
       );
       const resData = res.data.data;
       setAllPost((prev) =>
-        prev.map((post) => (post._id === resData._id ? resData : post))
+        prev.map((post) => (post._id === resData._id ? resData : post)),
       );
       setComment("");
     } catch (error) {
@@ -168,7 +169,7 @@ const Home = () => {
 
   const handleSelectUser = (id) => {
     setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
 
@@ -214,7 +215,7 @@ const Home = () => {
           text: link,
           messageType: "link",
         },
-        config
+        config,
       );
 
       if (res.data) {
@@ -255,7 +256,7 @@ const Home = () => {
                         }
                         className="d-flex align-items-center text-decoration-none"
                       >
-                        <img
+                        <SafeImage
                           className="user-img rounded-circle me-2"
                           src={
                             item.postedBy?.Photo
@@ -272,7 +273,7 @@ const Home = () => {
                     </div>
 
                     <div className="post-img-container">
-                      <img
+                      <SafeImage
                         src={
                           item?.photo
                             ? `${BASEURL}${item.photo}`
@@ -282,6 +283,7 @@ const Home = () => {
                         alt="Post"
                         loading="lazy"
                         onLoad={handleImageLoad}
+                       
                       />
                     </div>
 
@@ -336,7 +338,7 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                ) : null
+                ) : null,
               )
             ) : (
               <h2 className="text-center mt-5">No posts available</h2>
@@ -382,7 +384,7 @@ const Home = () => {
                       }`}
                     />
                   ) : null}
-                  <img
+                  <SafeImage
                     className="user-img rounded-circle"
                     src={
                       item.Photo

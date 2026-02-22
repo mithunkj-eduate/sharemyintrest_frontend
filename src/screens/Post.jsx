@@ -7,6 +7,7 @@ import Header from "../compount/Header";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "../compount/helper/SafImage";
 
 function Post({ pageType }) {
   const [pic, setPic] = useState("/images/uplodeImg.jpg");
@@ -179,12 +180,12 @@ function Post({ pageType }) {
                 </div>
 
                 <div className="w-75 createImgTop">
-                  <img className="w-100" src={pic} alt="UploadImage" />
+                 <SafeImage className="w-100" src={pic} alt="UploadImage" />
                 </div>
               </div>
               <div className="userInfo">
                 <div className="createPostUser">
-                  <img
+                 <SafeImage
                     alt=""
                     className="userImg"
                     src={

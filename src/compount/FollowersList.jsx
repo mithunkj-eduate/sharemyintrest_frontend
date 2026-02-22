@@ -2,6 +2,7 @@ import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { NavLink } from "react-router-dom";
 import { BASEURL } from "../config/config";
+import { SafeImage } from "./helper/SafImage";
 
 function FollowersList({ data }) {
   const [show, setShow] = useState(false);
@@ -82,7 +83,7 @@ function FollowersList({ data }) {
                           }}
                         >
                           <div className="postImgTop">
-                            <img
+                           <SafeImage
                               alt=""
                               className="userImg"
                               src={
@@ -129,7 +130,7 @@ function FollowersList({ data }) {
                           }}
                         >
                           <div className="postImgTop">
-                            <img
+                           <SafeImage
                               alt=""
                               className="userImg"
                               src={

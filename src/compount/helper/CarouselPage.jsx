@@ -6,6 +6,7 @@ import { config, BASEURL } from "../../config/config";
 import axios from "axios";
 import { AppContext, useAppContext } from "../../context/context";
 import intercepter from "../../server/intercepter";
+import { SafeImage } from "./SafImage";
 
 function CarouselPage({ item, userData: user, authStory, deleteStory }) {
   
@@ -37,7 +38,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
           <div className="column" onClick={() => setShow(true)}>
             <div className="ms-3">
               <div className="postImgTop">
-                <img
+               <SafeImage
                   className="userImg"
                   src={
                     userData?.Photo
@@ -63,7 +64,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
       >
         <Modal.Header closeButton>
           <div className="postImgTop">
-            <img
+           <SafeImage
               className="userImg"
               src={
                 userData?.Photo
@@ -87,7 +88,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
         <Carousel fade>
           {item[0]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   item[0]?.photo
                     ? `${BASEURL}${item[0]?.photo}`
@@ -105,7 +106,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
           )}
           {item[1]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   item[1]?.photo
                     ? `${BASEURL}${item[1]?.photo}`
@@ -122,7 +123,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
           )}
           {item[2]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   item[2]?.photo
                     ? `${BASEURL}${item[2]?.photo}`
@@ -139,7 +140,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
           )}
           {item[3]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   item[3]?.photo
                     ? `${BASEURL}${item[3]?.photo}`
@@ -156,7 +157,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
           )}
           {item[4]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   item[4]?.photo
                     ? `${BASEURL}${item[4]?.photo}`
@@ -173,7 +174,7 @@ function CarouselPage({ item, userData: user, authStory, deleteStory }) {
           )}
           {item[5]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   item[5]?.photo
                     ? `${BASEURL}${item[5]?.photo}`
@@ -250,7 +251,7 @@ function StoryViewersList({ story, userId }) {
                     <div>
                       <div className="d-flex flex-wrap gap-3 mb-2">
                         <div className="postImgTop">
-                          <img
+                         <SafeImage
                             alt=""
                             className="userImg"
                             src={
@@ -312,7 +313,7 @@ function CarouselPage2({ userData: user }) {
           <div className="column" onClick={() => setShow(true)}>
             <div className="ms-3">
               <div className="postImgTop" onClick={userStories}>
-                <img
+               <SafeImage
                   className="userImg"
                   src={
                     userData?.Photo
@@ -338,7 +339,7 @@ function CarouselPage2({ userData: user }) {
       >
         <Modal.Header closeButton>
           <div className="postImgTop">
-            <img
+           <SafeImage
               className="userImg"
               src={
                 userData?.Photo
@@ -362,7 +363,7 @@ function CarouselPage2({ userData: user }) {
         <Carousel fade>
           {stories[0]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   stories[0]?.photo
                     ? `${BASEURL}${stories[0]?.photo}`
@@ -378,7 +379,7 @@ function CarouselPage2({ userData: user }) {
           )}
           {stories[1]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   stories[1]?.photo
                     ? `${BASEURL}${stories[1]?.photo}`
@@ -394,7 +395,7 @@ function CarouselPage2({ userData: user }) {
           )}
           {stories[2]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   stories[2]?.photo
                     ? `${BASEURL}${stories[2]?.photo}`
@@ -410,7 +411,7 @@ function CarouselPage2({ userData: user }) {
           )}
           {stories[3]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   stories[3]?.photo
                     ? `${BASEURL}${stories[3]?.photo}`
@@ -426,7 +427,7 @@ function CarouselPage2({ userData: user }) {
           )}
           {stories[4]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   stories[4]?.photo
                     ? `${BASEURL}${stories[4]?.photo}`
@@ -442,7 +443,7 @@ function CarouselPage2({ userData: user }) {
           )}
           {stories[5]?.photo && (
             <Carousel.Item interval={1000}>
-              <img
+             <SafeImage
                 src={
                   stories[5]?.photo
                     ? `${BASEURL}${stories[5]?.photo}`

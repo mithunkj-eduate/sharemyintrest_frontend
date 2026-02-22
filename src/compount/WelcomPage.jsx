@@ -7,6 +7,7 @@ import { payloadTypes } from "../context/reducer";
 import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
+import { SafeImage } from "./helper/SafImage";
 
 function WelcomPage() {
   const { state } = useAppContext(AppContext);
@@ -60,7 +61,7 @@ function WelcomPage() {
       <Header />
       <div className="welcome ">
         <div className="container">
-          <img alt="welcomimage" src="/logo2.png" style={{ width: "100%" }} />
+         <SafeImage alt="welcomimage" src="/logo2.png" style={{ width: "100%" }} />
           <p className="fs-4" style={{ color: "#8903fd" }}>
             Welcome to ShareMyInterest App
           </p>

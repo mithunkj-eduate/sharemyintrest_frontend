@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Nav } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
@@ -9,8 +9,8 @@ import { CgProfile } from "react-icons/cg";
 import { AppContext, useAppContext } from "../context/context";
 import "../style/header.css";
 import { FaLocationArrow } from "react-icons/fa6";
-import { LuSquareDot } from "react-icons/lu";
 import RightDrawer from "./helper/RightDrawer";
+import { SafeImage } from "./helper/SafImage";
 
 function Header() {
   const navigate = useNavigate();
@@ -66,8 +66,17 @@ function Header() {
           >
             Log Out
           </li> */}
-          <li className={`navItem ${isActive("/createpost")}`}>
-            <LuSquareDot onClick={() => setShow(true)} />
+          <li
+            className={`navItem ${isActive("/createpost")}`}
+            onClick={() => setShow(true)}
+          >
+            <div style={{ width: "20px", height: "10px" }}>
+              <SafeImage
+                alt="icon"
+                src="/images/more.png"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </div>
           </li>
         </>
       );
@@ -163,14 +172,14 @@ function Header() {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex align-items-center">
               <div className="mt-2" style={{ width: "43px", height: "40px" }}>
-                <img
+                <SafeImage
                   alt="icon"
                   src="/icon.png"
                   style={{ width: "100%", height: "100%" }}
                 />
               </div>
               <div className="logoImgTop">
-                <img
+                <SafeImage
                   alt="logo"
                   src="/logo2.png"
                   style={{ width: "100%", height: "100%" }}
@@ -192,14 +201,14 @@ function Header() {
       <div className="headerNavPhone sticky-top bg-light p-1">
         <div className="d-flex ms-1">
           <div className="mt-2" style={{ width: "36px", height: "32px" }}>
-            <img
+            <SafeImage
               alt="icon"
               src="/icon.png"
               style={{ width: "100%", height: "100%" }}
             />
           </div>
           <div className="logoImgTop">
-            <img
+            <SafeImage
               alt="logo"
               src="/logo2.png"
               style={{ width: "100%", height: "100%" }}
@@ -213,8 +222,17 @@ function Header() {
           {location.pathname === "/login" ||
           location.pathname === "/signup" ||
           location.pathname === "/welcome" ? null : (
-            <div className={`navItem ${isActive("/createpost")}`}>
-              <LuSquareDot onClick={() => setShow(true)} />
+            <div
+              className={`navItem ${isActive("/createpost")}`}
+              onClick={() => setShow(true)}
+            >
+              <div className="ms-3" style={{ width: "20px", height: "10px" }}>
+                <SafeImage
+                  alt="icon"
+                  src="/images/more.png"
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </div>
             </div>
           )}
         </div>

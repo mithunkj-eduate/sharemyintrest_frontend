@@ -3,6 +3,7 @@ import { Modal } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { AppContext, useAppContext } from "../context/context";
 import { BASEURL } from "../config/config";
+import { SafeImage } from "./helper/SafImage";
 
 function FollowingList({ data }) {
   const [show, setShow] = useState(false);
@@ -83,7 +84,7 @@ function FollowingList({ data }) {
                           }}
                         >
                           <div className="postImgTop">
-                            <img
+                           <SafeImage
                               alt=""
                               className="userImg"
                               src={
@@ -130,7 +131,7 @@ function FollowingList({ data }) {
                           }}
                         >
                           <div className="postImgTop">
-                            <img
+                           <SafeImage
                               alt=""
                               className="userImg"
                               src={
