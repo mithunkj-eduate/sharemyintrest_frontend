@@ -52,15 +52,13 @@ function MainPage() {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SingUpPage />} />
         <Route path="/chat" element={<ChatScreen />} />
-
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<Profile />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/createpost" element={<Post pageType={"General"} />} />
         <Route path="/postdetails" element={<PostDetail />} />
         <Route path="/profile/:userId" element={<UserProfile />} />
         <Route path="/followingpost" element={<FollowingPost />} />
         <Route path="/linkpost/:id" element={<LinkPost />}></Route>
-
         <Route
           path="/chat/:conversationId/friend/:friendId"
           element={<Chat />}
@@ -114,6 +112,8 @@ const App = () => {
         <Route path="/welcom" element={<WelcomPage />}></Route>
         <Route path="/signup" element={<SingUpPage />}></Route>
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/login/:userId" element={<Login />} />
+
         {/* <Route
           path={"*" || "/pagenotfound"}
           element={<PageNotFound />}
