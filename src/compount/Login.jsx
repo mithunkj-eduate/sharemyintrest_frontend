@@ -9,6 +9,7 @@ import { BASEURL, BASEURL3 } from "../config/config";
 import Header from "./Header";
 import { Form, InputGroup } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { SafeImage } from "./helper/SafImage";
 
 const initialValues = {
   email: "",
@@ -66,70 +67,65 @@ function Login() {
       },
     });
 
-  useEffect(() => {
-    if (userId && BASEURL3) {
-      const handaleSubmitSharemyinterest = async () => {
-        setLoading(true);
-        try {
-          const res = await axios.get(`${BASEURL3}/users/${userId}`, {
+  const handaleSubmitSharemyinterest = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASEURL3}/users/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      console.log(res, "res");
+
+      if (res && res.data && res.data.data) {
+        const userData = res.data.data;
+        const body = {
+          user: userData.name,
+          userName: userData.name,
+          clientId: userData.clientId,
+          mobileNumber: userData.phoneNumber,
+        };
+
+        console.log(res, body);
+        const result = await axios.post(
+          `${BASEURL}/auth/laginWithShareMyInterest`,
+          body,
+          {
             headers: {
               "Content-Type": "application/json",
             },
             withCredentials: true,
-          });
-          console.log(res, "res");
+          },
+        );
 
-          if (res && res.data && res.data.data) {
-            const userData = res.data.data;
-            const body = {
-              user: userData.name,
-              userName: userData.name,
-              clientId: userData.clientId,
-              mobileNumber: userData.phoneNumber,
-            };
+        if (result && result.data && result.data.token) {
+          localStorage.setItem("smitoken", result.data.token);
+          localStorage.setItem("user", JSON.stringify(result.data.user));
 
-            console.log(res, body);
-            const result = await axios.post(
-              `${BASEURL}/auth/laginWithShareMyInterest`,
-              body,
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                withCredentials: true,
-              },
-            );
-
-            if (result && result.data && result.data.token) {
-              localStorage.setItem("smitoken", result.data.token);
-              localStorage.setItem("user", JSON.stringify(result.data.user));
-
-              // successmessage("login successfuly");
-              // alert("login successfuly");
-              // nav("/welcom");
-         return  window.location.href = "/";
-            }
-          }
-        } catch (error) {
-          console.log(error);
-          if (error.message) {
-            setError(JSON.stringify(error.message, null, 2));
-            alert(error.message);
-          }
-          if (error.response.data.message) {
-            // errormessage(error.response.data.message);
-            alert(error.response.data.message);
-          } else {
-            // errormessage("server error");
-            alert("server error");
-          }
-        } finally {
-          setLoading(false);
+          // successmessage("login successfuly");
+          // alert("login successfuly");
+          // nav("/welcom");
+          return (window.location.href = "/");
         }
-      };
-      handaleSubmitSharemyinterest();
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.message) {
+        setError(JSON.stringify(error.message, null, 2));
+        alert(error.message);
+      }
+      if (error.response.data.message) {
+        // errormessage(error.response.data.message);
+        alert(error.response.data.message);
+      } else {
+        // errormessage("server error");
+        alert("server error");
+      }
+    } finally {
+      setLoading(false);
     }
-  }, [userId]);
+  };
 
   return (
     <>
@@ -219,22 +215,24 @@ function Login() {
                   </NavLink>
                 </div>
               </form>
-              {/* <div className="text-center mt-2 mb-3">
-                <div
-                  className="mt-2 d-flex"
-                  style={{ width: "43px", height: "40px" }}
-                  onClick={() => {
-                    handaleSubmitSharemyinterest();
-                  }}
-                  disabled={loading}
-                >
-                 <SafeImage
-                    alt="icon"
-                    src="/icon.png"
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </div>{" "}
-              </div> */}
+              {userId && (
+                <div className="text-center mt-2 mb-3">
+                  <div
+                    className="mt-2 d-flex"
+                    style={{ width: "43px", height: "40px" }}
+                    onClick={() => {
+                      handaleSubmitSharemyinterest();
+                    }}
+                    disabled={loading}
+                  >
+                    <SafeImage
+                      alt="icon"
+                      src="/icon.png"
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </div>{" "}
+                </div>
+              )}
             </div>
           </div>
 
