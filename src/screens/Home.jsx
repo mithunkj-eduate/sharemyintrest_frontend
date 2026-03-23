@@ -16,6 +16,7 @@ import "../style/photofeed.css";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
 import { SafeImage } from "../compount/helper/SafImage";
+import MessageModal from "../utlity/MessageModal";
 
 const Home = () => {
   const { state } = useAppContext(AppContext);
@@ -28,6 +29,14 @@ const Home = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [shareMessage, setShareMessage] = useState("");
   const [currentPostId, setCurrentPostId] = useState(null);
+
+    const [toast, setToast] = useState({
+      show: false,
+      message: "",
+      type: "",
+    });
+
+
   const limit = 20;
 
   const isOnline = useIsOnline();
@@ -219,7 +228,13 @@ const Home = () => {
       );
 
       if (res.data) {
-        alert("Message sent successfully");
+        // alert("Message sent successfully");
+
+        setToast({
+              show: true,
+              type: "create",
+              message: "Message sent successfully"
+            });
         handleCloseShare();
       }
     } catch (error) {
@@ -413,6 +428,14 @@ const Home = () => {
           </Modal.Footer>
         </Modal>
       </div>
+
+      
+      <MessageModal
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ show: false, message: "", type: "" })}
+      />
     </>
   );
 };

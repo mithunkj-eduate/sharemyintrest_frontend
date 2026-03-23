@@ -65,22 +65,22 @@ function WelcomPage() {
           <p className="fs-4" style={{ color: "#8903fd" }}>
             Welcome to ShareMyInterest App
           </p>
-          <button className="btn button m-2 p-2" onClick={handleTestApi}>
+          {/* <button className="btn button m-2 p-2" onClick={handleTestApi}>
             Test Api
           </button>
           <button className="btn button m-2 p-2" onClick={handleHealthCheckApi}>
             Health Api
-          </button>
+          </button> */}
           {state && state.user && state.user.id ? (
             <Nav.Link href="/">
               <button className="btn button m-2 p-2">Home</button>
             </Nav.Link>
           ) : null}
-          <Nav.Link href="/test">
+          {/* <Nav.Link href="/test">
             <button className="btn button m-2 p-2">Test</button>
           </Nav.Link>
           <div>error: {error ? error : ""}</div>
-          <div>data: {data ? data : ""}</div>
+          <div>data: {data ? data : ""}</div> */}
         </div>
       </div>
     </>

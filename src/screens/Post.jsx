@@ -8,6 +8,7 @@ import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
 import { SafeImage } from "../compount/helper/SafImage";
+import MessageModal from "../utlity/MessageModal";
 
 function Post({ pageType }) {
   const [pic, setPic] = useState("/images/uplodeImg.jpg");
@@ -15,6 +16,12 @@ function Post({ pageType }) {
   const [title, setTitle] = useState();
   const [loading, setLoading] = useState(false);
   const { state } = useAppContext(AppContext);
+
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
   const nav = useNavigate();
   const isOnline = useIsOnline();
@@ -73,7 +80,7 @@ function Post({ pageType }) {
             setPic(URL.createObjectURL(imageFile));
           },
           "image/jpeg",
-          1
+          1,
         );
         setinvalidImage(null);
       };
@@ -90,7 +97,12 @@ function Post({ pageType }) {
 
   const postFeatch = async () => {
     if (!title) {
-      return alert("add the title");
+      // return alert("add the title");
+      return setToast({
+        show: true,
+        type: "none",
+        message: "add the title",
+      });
     }
     const data = new FormData();
     data.append("photo", image);
@@ -101,22 +113,44 @@ function Post({ pageType }) {
         const resPost = await intercepter.post(
           `${BASEURL}/post/createNewPost`,
           data,
-          config1
+          config1,
         );
-        alert("successfull");
+        // alert("successfull");
+        setToast({
+          show: true,
+          type: "create",
+          message: "created successfull",
+        });
         nav("/");
       } catch (error) {
         console.log(error);
-        alert("failed");
+        // alert("failed");
+
+        setToast({
+          show: true,
+          type: "none",
+          message: "failed",
+        });
       }
     } else {
-      alert("add image");
+      // alert("add image");
+
+      setToast({
+        show: true,
+        type: "none",
+        message: "add image",
+      });
     }
   };
 
   const postStory = async () => {
     if (!image) {
-      return alert("please add image");
+      return setToast({
+        show: true,
+        type: "none",
+        message: "please add image",
+      });
+      // return alert("please add image");
     }
     const data = new FormData();
     data.append("photo", image);
@@ -126,19 +160,36 @@ function Post({ pageType }) {
 
     try {
       if (!isOnline) {
-        alert("No internet connection. Please check your network.");
+        setToast({
+          show: true,
+          type: "none",
+          message: "No internet connection. Please check your network.",
+        });
+        // alert("No internet connection. Please check your network.");
         return;
       }
       const resPost = await intercepter.post(
         `${BASEURL}/stories/createStory`,
         data,
-        config1
+        config1,
       );
-      alert("successfull");
+
+      setToast({
+        show: true,
+        type: "create",
+        message: "created successfully",
+      });
+      // alert("successfull");
       nav("/");
     } catch (error) {
       console.log(error);
-      alert("failed");
+      // alert("failed");
+
+      setToast({
+        show: true,
+        type: "create",
+        message: "failed",
+      });
     }
   };
 
@@ -180,12 +231,12 @@ function Post({ pageType }) {
                 </div>
 
                 <div className="w-75 createImgTop">
-                 <SafeImage className="w-100" src={pic} alt="UploadImage" />
+                  <SafeImage className="w-100" src={pic} alt="UploadImage" />
                 </div>
               </div>
               <div className="userInfo">
                 <div className="createPostUser">
-                 <SafeImage
+                  <SafeImage
                     alt=""
                     className="userImg"
                     src={
@@ -215,6 +266,13 @@ function Post({ pageType }) {
           )}
         </div>
       </div>
+
+      <MessageModal
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ show: false, message: "", type: "" })}
+      />
     </>
   );
 }

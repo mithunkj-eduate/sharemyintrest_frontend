@@ -12,6 +12,7 @@ import { AppContext, useAppContext } from "../context/context";
 import Header from "../compount/Header";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
+import MessageModal from "../utlity/MessageModal";
 
 function Profile() {
   const [comment, setComment] = useState("");
@@ -26,7 +27,11 @@ function Profile() {
   const [loading, setLoading] = useState(false);
   const [ref, setRef] = useState(false);
   const { state } = useAppContext(AppContext);
-
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
   let limit = 20;
   // let skip = 0;
@@ -47,7 +52,7 @@ function Profile() {
       }
       const res = await intercepter.get(
         `${BASEURL}/user/${state.user.id}?limit=${limit}`,
-        config
+        config,
       );
 
       const resData = await res.data;
@@ -60,7 +65,7 @@ function Profile() {
       setUserFollowers(resData.user.followers);
       setPostLength(resData.postLength);
       setStories(resData.stories);
-     
+
       resData.user.followers.forEach((element) => {
         if (element._id === state.user?.id) {
           setIsFollow(true);
@@ -92,7 +97,7 @@ function Profile() {
       const res = await intercepter.put(
         `${BASEURL}/post/like`,
         { postId: id },
-        config
+        config,
       );
       const resData = await res.data.data;
       const newData = allPost.map((posts) => {
@@ -118,7 +123,7 @@ function Profile() {
       const res = await intercepter.put(
         `${BASEURL}/post/unlike`,
         { postId: id },
-        config
+        config,
       );
       const resData = await res.data.data;
       const newData = allPost.map((posts) => {
@@ -143,7 +148,7 @@ function Profile() {
       const res = await intercepter.put(
         `${BASEURL}/post/comment`,
         { text: comment, postId: id },
-        config
+        config,
       );
       const resData = await res.data.data;
       const newData = allPost.map((posts) => {
@@ -169,12 +174,18 @@ function Profile() {
       const resPost = await intercepter.put(
         `${BASEURL}/user/uploadProfilePic`,
         formdata,
-        config
+        config,
       );
       const resData = await resPost.data.data;
       setUser(resData);
 
-      alert("successfull");
+      // alert("successfull");
+
+      setToast({
+        show: true,
+        type: "create",
+        message: "Change profile successfully",
+      });
 
       //window.location.reload();
     } catch (error) {
@@ -192,7 +203,7 @@ function Profile() {
       const res = await intercepter.put(
         `${BASEURL}/user/follow`,
         { followId: userId },
-        config
+        config,
       );
       setIsFollow(true);
       const resData = await res.data.data;
@@ -200,9 +211,8 @@ function Profile() {
       setUserFollowing(resData.following);
       setUserFollowers(resData.followers);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  
   };
 
   const unfollowUser = async (userId) => {
@@ -214,7 +224,7 @@ function Profile() {
       const res = await intercepter.put(
         `${BASEURL}/user/unfollow`,
         { followId: userId },
-        config
+        config,
       );
       setIsFollow(false);
       const resData = await res.data.data;
@@ -222,9 +232,8 @@ function Profile() {
       setUserFollowing(resData.following);
       setUserFollowers(resData.followers);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-   
   };
 
   const deleteStory = async (id) => {
@@ -233,7 +242,6 @@ function Profile() {
     //   { storyId: id },
     //   config1
     // );
-
   };
 
   useEffect(() => {
@@ -255,7 +263,7 @@ function Profile() {
 
   return (
     <>
-    <Header />
+      <Header />
       <div className="container contenerUser">
         <div className="userInfo">
           <ProfilePic data={{ user, changeProfilePhoto, setUrl }} />
@@ -303,27 +311,34 @@ function Profile() {
         />
 
         <div className="rowCard">
-          {allPost && allPost.length ? allPost.map((item) => {
-            return (
-              <>
-                <PostDetail
-                  data={{
-                    item,
-                    comment,
-                    setComment,
-                    feactComment,
-                    feactLike,
-                    feactunLike,
-                    allPost,
-                  }}
-                />
-              </>
-            );
-          }) : 
-          null
-          }
+          {allPost && allPost.length
+            ? allPost.map((item) => {
+                return (
+                  <>
+                    <PostDetail
+                      data={{
+                        item,
+                        comment,
+                        setComment,
+                        feactComment,
+                        feactLike,
+                        feactunLike,
+                        allPost,
+                      }}
+                    />
+                  </>
+                );
+              })
+            : null}
         </div>
       </div>
+
+      <MessageModal
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ show: false, message: "", type: "" })}
+      />
     </>
   );
 }

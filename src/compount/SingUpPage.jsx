@@ -14,6 +14,7 @@ import { useIsOnline } from "../hooks/useIsOnline";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { Form, InputGroup } from "react-bootstrap";
 import intercepter from "../server/intercepter";
+import MessageModal from "../utlity/MessageModal";
 
 const initialValues = {
   user: "",
@@ -28,6 +29,11 @@ function SingUpPage() {
   const isOnline = useIsOnline();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+ const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
   const nav = useNavigate();
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -39,7 +45,12 @@ function SingUpPage() {
         delete values.confirm_password;
         try {
           if (!isOnline) {
-            alert("No internet connection. Please check your network.");
+            // alert("No internet connection. Please check your network.");
+             setToast({
+              show: true,
+              type: "none",
+              message: "No internet connection. Please check your network."
+            });
             return;
           }
           setLoading(true);
@@ -48,7 +59,12 @@ function SingUpPage() {
         } catch (error) {
           console.log(error);
           // errormessage(error.response.data.message);
-          alert(error.response.data.message);
+          // alert(error.response.data.message);
+           setToast({
+              show: true,
+              type: "none",
+              message: error.response.data.message
+            });
         } finally {
           setLoading(false);
         }
@@ -72,11 +88,24 @@ function SingUpPage() {
       localStorage.setItem("smitoken", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       // successmessage("login successfuly");
-      alert("login successfuly");
+
+          setToast({
+              show: true,
+              type: "create",
+              message: "login successfuly",
+            });
+
+      // alert("login successfuly");
       nav("/welcom");
     } catch (error) {
       console.log(error);
-      alert(error.message);
+      // alert(error.message);
+
+       setToast({
+              show: true,
+              type: "none",
+              message: error.message
+            });
     }
   };
 
@@ -259,6 +288,13 @@ function SingUpPage() {
         </div>
       </div>
 
+
+ <MessageModal
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ show: false, message: "", type: "" })}
+      />
       {/* <ToastContainer /> */}
     </>
   );

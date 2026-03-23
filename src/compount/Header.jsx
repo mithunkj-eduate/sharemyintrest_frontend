@@ -171,7 +171,7 @@ function Header() {
         <div className="container">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex align-items-center">
-              <div className="mt-2" style={{ width: "43px", height: "40px" }}>
+              <div className="" style={{ width: "36px", height: "36px" }}>
                 <SafeImage
                   alt="icon"
                   src="/icon.png"

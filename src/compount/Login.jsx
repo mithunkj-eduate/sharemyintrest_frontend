@@ -10,6 +10,7 @@ import Header from "./Header";
 import { Form, InputGroup } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { SafeImage } from "./helper/SafImage";
+import MessageModal from "../utlity/MessageModal";
 
 const initialValues = {
   email: "",
@@ -22,6 +23,12 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { userId } = useParams();
+
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
@@ -43,22 +50,44 @@ function Login() {
             localStorage.setItem("user", JSON.stringify(res.data.user));
 
             // successmessage("login successfuly");
-            alert("login successfuly");
+            // alert("login successfuly");
+
+            setToast({
+              show: true,
+              type: "create",
+              message: "login successfully",
+            });
+
             // nav("/welcom");
             window.location.href = "/";
           }
         } catch (error) {
           console.log(error);
           if (error.message) {
-            setError(JSON.stringify(error.message, null, 2));
-            alert(error.message);
+            // setError(JSON.stringify(error.message, null, 2));
+            // alert(error.message);
+             setToast({
+              show: true,
+              type: "none",
+              message: error.message,
+            });
           }
           if (error.response.data.message) {
             // errormessage(error.response.data.message);
-            alert(error.response.data.message);
+            // alert(error.response.data.message);
+              setToast({
+              show: true,
+              type: "none",
+              message: error.response.data.message,
+            });
           } else {
             // errormessage("server error");
-            alert("server error");
+            // alert("server error");
+            setToast({
+              show: true,
+              type: "none",
+              message: "internal server error",
+            });
           }
         } finally {
           setLoading(false);
@@ -112,15 +141,31 @@ function Login() {
     } catch (error) {
       console.log(error);
       if (error.message) {
-        setError(JSON.stringify(error.message, null, 2));
-        alert(error.message);
+        // setError(JSON.stringify(error.message, null, 2));
+        // alert(error.message);
+
+         setToast({
+              show: true,
+              type: "none",
+              message: error.message,
+            });
       }
       if (error.response.data.message) {
         // errormessage(error.response.data.message);
-        alert(error.response.data.message);
+        // alert(error.response.data.message);
+           setToast({
+              show: true,
+              type: "none",
+              message:error.response.data.message
+            });
       } else {
         // errormessage("server error");
-        alert("server error");
+        // alert("server error");
+         setToast({
+              show: true,
+              type: "none",
+              message:"server error"
+            });
       }
     } finally {
       setLoading(false);
@@ -240,6 +285,13 @@ function Login() {
         </div>
       </div>
       <ToastContainer />
+
+      <MessageModal
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ show: false, message: "", type: "" })}
+      />
     </>
   );
 }

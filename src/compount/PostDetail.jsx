@@ -11,12 +11,18 @@ import { AppContext, useAppContext } from "../context/context";
 import { useIsOnline } from "../hooks/useIsOnline";
 import intercepter from "../server/intercepter";
 import { SafeImage } from "./helper/SafImage";
+import MessageModal from "../utlity/MessageModal";
 
 function PostDetail({ data }) {
   const [show, setShow] = useState(false);
   const { item, comment, setComment, feactComment, feactLike, feactunLike } =
     data;
   const { state } = useAppContext(AppContext);
+ const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
   const nav = useNavigate();
   const isOnline = useIsOnline();
@@ -25,7 +31,12 @@ function PostDetail({ data }) {
     try {
       if (window.confirm("Do you really want to delete this post ?")) {
         if (!isOnline) {
-          alert("No internet connection. Please check your network.");
+          // alert("No internet connection. Please check your network.");
+           setToast({
+              show: true,
+              type: "none",
+              message: "No internet connection. Please check your network."
+            });
           return;
         }
         const res = await intercepter.delete(
@@ -105,6 +116,13 @@ function PostDetail({ data }) {
 
         <CommentData values={{ item, comment, setComment, feactComment }} />
       </Modal>
+
+       <MessageModal
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ show: false, message: "", type: "" })}
+      />
     </>
   );
 }
